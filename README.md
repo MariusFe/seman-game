@@ -1,1 +1,0 @@
-# seman-game
