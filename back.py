@@ -1,7 +1,9 @@
+from importlib.machinery import WindowsRegistryFinder
 import wikipediaapi
 import requests
 import re
 from gensim.models import KeyedVectors
+import json
 
 
 def getArticle():
@@ -10,7 +12,7 @@ def getArticle():
     s= requests.Session()
     URL = "https://fr.wikipedia.org/w/api.php"
     taille_article = 1000
-    nombre_paragraphes = 1
+    nombre_paragraphes = 3
 
     PARAMS = {
         "action": "query",
@@ -28,13 +30,15 @@ def getArticle():
     DATA = R.json()
     DATA["query"]["random"][0]["title"] = ':'
 
-    # If it contains ':' that means it is a discussion, a user 
+    # If it contains ':' that means it is a discussion, a user or whatever
+    # We then loop until we find a article without ':'
     while re.compile(r':').findall(DATA["query"]["random"][0]["title"]):
         R = s.get(url=URL, params=PARAMS)
         DATA = R.json()
         # print(DATA["query"]["random"][0]["title"])
         page_py = wiki_wiki.page(DATA["query"]["random"][0]["title"])
         # print(len(page_py.text.split(" ")))
+        # If the article has less than 'taille_article' words we add ':' to the title to loop again
         if len(page_py.text.split(" ")) < taille_article:
             DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
@@ -42,9 +46,27 @@ def getArticle():
     # print(page_py.text)
     # print(DATA["query"]["random"][0]["title"])
 
+    # We split in paragraphs (may be useful later) and spaces 
     paragraphes = page_py.text.split("\n")[:nombre_paragraphes]
     paragraphes = [re.split(r" ", par) for par in paragraphes]
-    return page_py.text, DATA["query"]["random"][0]["title"], paragraphes
+
+    i=0
+
+    words = {
+        "titre": DATA["query"]["random"][0]["title"],
+        "mots": []
+    }
+
+    for par in paragraphes:
+        for word in par:
+            words["mots"].append({
+                "id": i,
+                "mot": word
+            })
+            i += 1
+        words["mots"].append({"mot": "\n"})
+
+    return words
 
 def semantique(mot1, mot2):
 
