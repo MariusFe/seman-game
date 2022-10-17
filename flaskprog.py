@@ -1,10 +1,7 @@
 from flask import Flask, render_template 
-from flaskext.markdown import Markdown
 import json
-from pygments.formatters import HtmlFormatter
 
 app = Flask(__name__)
-Markdown(app)
 
 article = open("article.txt","r",encoding='utf-8').read()
 
