@@ -7,11 +7,39 @@
 </head>
     <body>
         <h1>Salut à tous</h1>
-        <p>
-        {% for word in receive["titre"] %}
-        <span id = {{word["id"]}}> {{word["mot"]}}</span>
-        {%endfor%}
+        <button id="new">
+            New Page
+          </button>
+        <div id="receive" style="display: none">
+            {{receive}}
+        </div>
+        <p id="titre">
+
+            {% for word in receive["titre"] %}
+            <span id = {{word["id"]}}> {{word["mot"]}}</span>
+            {%endfor%}
+    
         </p>
+
+
+        <p id="article"></p>
+    
+
         
     </body>
+
+    <script>
+        $(document).ready(function() {
+    
+          /* Votre Code ICI */
+            
+            $("#new").click(function(){
+                
+            document.getElementById("receive").innerHTML = "{{result}}";
+            });
+
+
+        });
+            
+        </script>
 </html>
