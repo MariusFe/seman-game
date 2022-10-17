@@ -1,0 +1,19 @@
+{"mots":[
+    {
+        "id":1,
+        "classe":0,
+        "mot" : "Planche",
+        "pourcentage":85},
+    {
+            "id":2,
+            "classe":0,
+            "mot" : "brouzouf",
+            "pourcentage":25},
+            {
+                "id":3,
+                "classe":1,
+                "mot" : "XXXXXXX",
+                "pourcentage":25}
+]
+
+}
