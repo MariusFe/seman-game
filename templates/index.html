@@ -3,9 +3,15 @@
 <head>
     <meta charset="utf-8"/>
     <title> Test</title>
+    <script type="text/javascript" src="jquery/js/jquery-3.5.1.js"></script>
 </head>
     <body>
-        <h1>{{titre}}</h1>
+        <h1>Salut à tous</h1>
+        <p>
+        {% for word in receive["titre"] %}
+        <span id = {{word["id"]}}> {{word["mot"]}}</span>
+        {%endfor%}
+        </p>
         
     </body>
 </html>

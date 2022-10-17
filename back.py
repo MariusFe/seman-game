@@ -53,15 +53,30 @@ def getArticle():
     i=0
 
     words = {
-        "titre": DATA["query"]["random"][0]["title"],
+        "titre": [],
         "mots": []
     }
+
+    for mot in DATA["query"]["random"][0]["title"].split(" "):
+        words["titre"].append({
+                "id": i,
+                "mot": mot,
+                "trouve": False,
+                "mot_proche": None,
+                "percentage": 0,
+                "character": False
+        })
+        i += 1
 
     for par in paragraphes:
         for word in par:
             words["mots"].append({
                 "id": i,
-                "mot": word
+                "mot": word,
+                "trouve": False,
+                "mot_proche": None,
+                "percentage": 0,
+                "character": False
             })
             i += 1
         words["mots"].append({"mot": "\n"})
