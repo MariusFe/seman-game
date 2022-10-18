@@ -4,7 +4,7 @@ import back
 app = Flask(__name__,static_folder=".",static_url_path='')
 texte = {}
 
-@app.route('/new_article')
+@app.route('/new_article', methods=['POST'])
 def new_article():
   texte = back.getArticle()
   send = {
@@ -18,9 +18,10 @@ def new_article():
     send["titre"].append({
       "id": i,
       "classes": ["titre", "cache"],
-      "mot": "&nbsp;" * len(mot),
+      "mot": " " * len(mot["mot"]),
       "percentage": 0
     })
+    i += 1
   
   return render_template('index.html', receive=send)
 

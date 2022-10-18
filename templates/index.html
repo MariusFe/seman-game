@@ -7,22 +7,33 @@
 </head>
     <body>
         <h1>Salut à tous</h1>
-        <button id="new">
-            New Page
-          </button>
+        <form action="/new_article" method="post">
+            <button id="new" name="new_button" type="submit">
+                New Page
+            </button>
+        </form>
         <div id="receive" style="display: none">
+            {% if receive %}
             {{receive}}
+            {% endif %}
         </div>
         <p id="titre">
-
+            {% if receive %}
             {% for word in receive["titre"] %}
-            <span id = {{word["id"]}}> {{word["mot"]}}</span>
+            <span id = {{word["id"]}} class="mot"> {{word["mot"]}}</span>
             {%endfor%}
+            {% endif %}
     
         </p>
 
 
-        <p id="article"></p>
+        <p id="article">
+            {% if receive %}
+            {% for word in receive["mots"] %}
+            <span id = {{word["id"]}} class="mot"> {{word["mot"]}}</span>
+            {%endfor%}
+            {% endif %}
+        </p>
     
 
         
@@ -34,8 +45,9 @@
           /* Votre Code ICI */
             
             $("#new").click(function(){
-                
-            document.getElementById("receive").innerHTML = "{{result}}";
+                document.getElementById("receive").innerHTML = "{{result}}";
+                var jison = document.getElementById("receive").innerHTML;
+                console.log(jison);
             });
 
 
