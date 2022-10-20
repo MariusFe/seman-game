@@ -14,5 +14,6 @@ IF EXIST "./data/model.bin" (
 :: Download packages
 pip install wikipedia-api --user
 pip install gensim --user
+pip install flask --user
 :: Launch server
-python main.py
+python index.py
