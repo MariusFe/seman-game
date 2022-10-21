@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 import back
+import json
 
 app = Flask(__name__,static_folder=".",static_url_path='')
 texte = {}
@@ -23,7 +24,7 @@ def new_article():
     })
     i += 1
   
-  return render_template('index.html', receive=send)
+  return render_template('index.html', receive=json.dumps(send))
 
 @app.route('/')
 def home():

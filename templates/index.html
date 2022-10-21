@@ -12,11 +12,7 @@
                 New Page
             </button>
         </form>
-        <div id="receive" style="display: none">
-            {% if receive %}
-            {{receive}}
-            {% endif %}
-        </div>
+        <div id="receive" style="display: none">{% if receive %}{{receive}}{% endif %}</div>
         <p id="titre">
             {% if receive %}
             {% for word in receive["titre"] %}
@@ -39,19 +35,25 @@
         
     </body>
 
-    <script>
-        $(document).ready(function() {
-    
-          /* Votre Code ICI */
-            
-            $("#new").click(function(){
-                document.getElementById("receive").innerHTML = "{{result}}";
-                var jison = document.getElementById("receive").innerHTML;
+
+
+        {%if receive%}
+        <script>
+            const style = {
+                "titre": "font size: 2.5em; font-weight: bold;",
+                "article": "font size: 1em;",
+                "cache": "background-color: rgb(60,60,60);"
+            };
+            $(document).ready(function() {
+                var jison = JSON.parse(document.getElementById("receive").innerHTML);
                 console.log(jison);
+                jison["titre"].forEach(element => {
+                    element["classes"].forEach(classe =>{
+                        document.getElementById(element["id"]).style = document.getElementById(element["id"]).style + style[classe];
+                    });
+                });
             });
-
-
-        });
-            
+                
         </script>
+        {% endif %}
 </html>
