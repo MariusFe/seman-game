@@ -10,7 +10,7 @@ def new_article():
   texte = back.getArticle()
   send = {
     "titre": [],
-    "mots": []
+    "article": []
   }
 
   i = 0
@@ -19,12 +19,21 @@ def new_article():
     send["titre"].append({
       "id": i,
       "classes": ["titre", "cache"],
-      "mot": " " * len(mot["mot"]),
+      "mot": "#" * len(mot["mot"]),
+      "percentage": 0
+    })
+    i += 1
+
+  for mot in texte["article"]:
+    send["article"].append({
+      "id": i,
+      "classes": ["article", "cache"],
+      "mot": "#" * len(mot["mot"]),
       "percentage": 0
     })
     i += 1
   
-  return render_template('index.html', receive=json.dumps(send))
+  return render_template('index.html', receive=send, receive1 = json.dumps(send))
 
 @app.route('/')
 def home():

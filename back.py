@@ -12,7 +12,7 @@ def getArticle():
     s= requests.Session()
     URL = "https://fr.wikipedia.org/w/api.php"
     taille_article = 1000
-    nombre_paragraphes = 3
+    nombre_paragraphes = 10
 
     PARAMS = {
         "action": "query",
@@ -50,12 +50,17 @@ def getArticle():
     paragraphes = page_py.text.split("\n")[:nombre_paragraphes]
     paragraphes = [re.split(r" ", par) for par in paragraphes]
 
+
     i=0
 
     words = {
         "titre": [],
-        "mots": []
+        "article": []
     }
+
+    # TO TEST THE STUFF, REMOVE FOR PRODUCTION
+    # titre = "Ceci est un test de titre"
+    # paragraphes = [["Ceci","est","un","test","de","texte"]]
 
     for mot in DATA["query"]["random"][0]["title"].split(" "):
         words["titre"].append({
@@ -70,7 +75,7 @@ def getArticle():
 
     for par in paragraphes:
         for word in par:
-            words["mots"].append({
+            words["article"].append({
                 "id": i,
                 "mot": word,
                 "trouve": False,
@@ -79,7 +84,7 @@ def getArticle():
                 "character": False
             })
             i += 1
-        words["mots"].append({"mot": "\n"})
+        words["article"].append({"mot": "\n"})
 
     return words
 
