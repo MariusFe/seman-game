@@ -12,6 +12,12 @@
                 New Page
             </button>
         </form>
+        <form action="/submit" method="post">
+            <input type="text" id="word" name="in_word" placeholder="Mot">
+            <button id="submit_word" name="submit_word" type="submit">
+                Submit mot
+            </button>
+        </form>
         <div id="receive" style="display: none">{% if receive %}{{receive1}}{% endif %}</div>
         <p id="titre">
             {% if receive %}
