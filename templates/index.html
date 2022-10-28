@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <title> Test</title>
+    <script type="text/javascript" src="jquery/js/jquery-3.5.1.js"></script>
+</head>
+    <body>
+        <h1>السلام عليكم</h1>
+        <form action="/new_article" method="post">
+            <button id="new" name="new_button" type="submit">
+                New Page
+            </button>
+        </form>
+        <form action="/submit" method="post">
+            <input type="text" id="word" name="in_word" placeholder="Mot">
+            <button id="submit_word" name="submit_word" type="submit">
+                Submit mot
+            </button>
+        </form>
+        <div id="receive" style="display: none">{% if receive %}{{receive1}}{% endif %}</div>
+        <p id="titre">
+            {% if receive %}
+            {% for word in receive["titre"] %}
+            <span id = {{word["id"]}} class="mot" style=""> {{word["mot"]}}</span>
+            {%endfor%}
+            {% endif %}
+    
+        </p>
+
+
+        <p id="article">
+            {% if receive %}
+            {% for word in receive["article"] %}
+            <span id = {{word["id"]}} class="mot" style=""> {{word["mot"]}}</span>
+            {%endfor%}
+            {% endif %}
+        </p>
+    
+
+        
+    </body>
+
+
+
+        {%if receive%}
+        <script>
+            $(document).ready(function() {
+                var jison = JSON.parse(document.getElementById("receive").innerHTML);
+                jison["titre"].forEach(element => {
+                    element["classes"].forEach(classe =>{
+                        document.getElementById(element["id"]).style.fontSize = "2.5em";
+                        document.getElementById(element["id"]).style.fontWeight = "bold";
+                        switch (classe){
+                            case  "cache":
+                                document.getElementById(element["id"]).style.backgroundColor = "rgb(60,60,60)";
+                                break;
+                            default:
+                        }
+                        
+                    });
+                });
+                jison["article"].forEach(element => {
+                    element["classes"].forEach(classe =>{
+                        document.getElementById(element["id"]).style.fontSize = "1em";
+                        switch (classe){
+                            case  "cache":
+                                document.getElementById(element["id"]).style.backgroundColor = "rgb(60,60,60)";
+                                break;
+                            default:
+                        }
+                        
+                    });
+                });
+            });
+                
+        </script>
+        {% endif %}
+</html>
