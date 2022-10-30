@@ -5,16 +5,18 @@ from gensim.models import KeyedVectors
 
 class Back:
 
-    def __init__(self):
-        self.words = {}
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10):
+        self.toIndex = {}
+        self.text = {}
+        self.taille_article = taille_article
+        self.nb_paragraphes = nb_paragraphes
+        self.model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
 
     def getArticle(self):
         #Creating the session and preparing the url
 
         s= requests.Session()
         URL = "https://fr.wikipedia.org/w/api.php"
-        taille_article = 1000
-        nombre_paragraphes = 10
 
         PARAMS = {
             "action": "query",
@@ -40,61 +42,88 @@ class Back:
             # print(DATA["query"]["random"][0]["title"])
             page_py = wiki_wiki.page(DATA["query"]["random"][0]["title"])
             # print(len(page_py.text.split(" ")))
-            # If the article has less than 'taille_article' words we add ':' to the title to loop again
-            if len(page_py.text.split(" ")) < taille_article:
+            # If the article has less words than 'taille_article' words we add ':' to the title to loop again
+            if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
-        # print(page_py.categories)
-        # print(page_py.text)
-        # print(DATA["query"]["random"][0]["title"])
-
         # We split in paragraphs (may be useful later) and spaces 
-        paragraphes = page_py.text.split("\n")[:nombre_paragraphes]
-        paragraphes = [re.split(r" ", par) for par in paragraphes]
+        # paragraphes = page_py.text.split("\n")[:self.nombre_paragraphes]
+        # paragraphes = [re.split(r" ", par) for par in paragraphes]
 
+
+
+
+
+        self.text = {}
+        self.toIndex = {}
+        self.taille_titre = len(DATA["query"]["random"][0]["title"].split(" "))
 
         i=0
-
-        self.words = {
-            "words":[]
-        }
-
-        # TO TEST THE STUFF, REMOVE FOR PRODUCTION
-        # titre = "Ceci est un test de titre"
-        # paragraphes = [["Ceci","est","un","test","de","texte"]]
-
         for mot in DATA["query"]["random"][0]["title"].split(" "):
-            self.words["words"].append({
-                    "mot": mot,
-                    "type": "titre",
-                    "character": False
-            })
+            self.text[i] = {
+                "mot": mot,
+                "titre": True
+            }
+            self.toIndex[i] = {
+                "mot": "#" * len(mot),
+                "type": "titre",
+                "etat": ["cache"],
+                "character": False
+            }
             i += 1
 
-        for par in paragraphes:
-            for word in par:
-                self.words["words"].append({
-                    "mot": word,
+        for mot in page_py.text.split(" "):
+            self.text[i] = {
+                "mot": mot,
+                "titre": False
+            }
+            if mot == "\n":
+                self.toIndex[i] = {
+                    "mot": "#" * len(mot),
                     "type": "article",
+                    "etat": ["cache"],
                     "character": False
-                })
-                i += 1
-            self.words["words"].append({
-                "mot": "\n", 
-                "type": "article",
-                "character": True
-            })
+                }
+            else:
+                self.toIndex[i] = {
+                        "mot": "#" * len(mot),
+                        "type": "article",
+                        "etat": ["cache"],
+                        "character": False
+                    }
+            i += 1
 
-        return self.words
+        return self.toIndex
 
-    def semantique(self, mot1, mot2):
+    def testMot(self, motToTest):
 
-        try:
-            model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
-            return model.distance(mot1, mot2), model.similarity(mot1, mot2)
-        except Exception:
-            return None
+        try: 
+            model.similarity("bonjour", motToTest)
+        except:
+            print("Le mot n'existe pas")
 
-    def getWords(self):
+        i = 0
+        for mot in self.text:
+            if mot == motToTest:
+                self.toIndex[i]["mot"] = mot
+                self.toIndex[i]["classe"] = ["trouve", "new_trouve"]
 
-        return self.words
+            elif "new_trouve" in self.toIndex[i]["classe"]:
+                self.toIndex[i]["classe"] = ["trouve"]
+
+            elif "trouve" in self.toIndex[i]["classe"]:
+                pass 
+
+            elif "trouve" not in self.toIndex[i]["classe"]:
+                similarity = model.similarity(mot["mot"], motToTest)
+                if similarity > 0.2 and similarity > self.toIndex[i]["percentage"]:
+                    self.toIndex[i]["percentage"] = similarity
+                    self.toIndex[i]["classe"] = ["proche"]
+
+                    if len(mot) <= len(motToTest):
+                        self.toIndex[i]["mot"] = motToTest
+                    elif len(mot) > len(motToTest):
+                        self.toIndex[i]["mot"] = math.floor((len(mot) - len(motToTest))/2) * "#" + motToTest + math.ceil((len(mot) - len(motToTest))/2) * "#"
+
+
+        return toIndex
