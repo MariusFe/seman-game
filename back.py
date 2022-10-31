@@ -2,6 +2,7 @@ import wikipediaapi
 import requests
 import re
 from gensim.models import KeyedVectors
+import math
 
 class Back:
 
@@ -68,7 +69,8 @@ class Back:
                 "mot": "#" * len(mot),
                 "type": "titre",
                 "etat": ["cache"],
-                "character": False
+                "character": False,
+                "percentage": 0
             }
             i += 1
 
@@ -79,18 +81,20 @@ class Back:
             }
             if mot == "\n":
                 self.toIndex[i] = {
-                    "mot": "#" * len(mot),
+                    "mot": "%",
                     "type": "article",
                     "etat": ["cache"],
-                    "character": False
+                    "character": True,
+                    "percentage": 0
                 }
             else:
                 self.toIndex[i] = {
-                        "mot": "#" * len(mot),
-                        "type": "article",
-                        "etat": ["cache"],
-                        "character": False
-                    }
+                    "mot": "#" * len(mot),
+                    "type": "article",
+                    "etat": ["cache"],
+                    "character": False,
+                    "percentage": 0
+                }
             i += 1
 
         return self.toIndex
@@ -98,32 +102,35 @@ class Back:
     def testMot(self, motToTest):
 
         try: 
-            model.similarity("bonjour", motToTest)
+            self.model.similarity("bonjour", motToTest)
         except:
             print("Le mot n'existe pas")
 
         i = 0
-        for mot in self.text:
-            if mot == motToTest:
-                self.toIndex[i]["mot"] = mot
-                self.toIndex[i]["classe"] = ["trouve", "new_trouve"]
+        for i in range(0, len(self.text)):
+            if self.text[i]["mot"] == motToTest:
+                self.toIndex[i]["mot"] = self.text[i]["mot"]
+                self.toIndex[i]["etat"] = ["trouve", "new_trouve"]
 
-            elif "new_trouve" in self.toIndex[i]["classe"]:
-                self.toIndex[i]["classe"] = ["trouve"]
+            elif "new_trouve" in self.toIndex[i]["etat"]:
+                self.toIndex[i]["etat"] = ["trouve"]
 
-            elif "trouve" in self.toIndex[i]["classe"]:
+            elif "trouve" in self.toIndex[i]["etat"]:
                 pass 
 
-            elif "trouve" not in self.toIndex[i]["classe"]:
-                similarity = model.similarity(mot["mot"], motToTest)
+            elif "trouve" not in self.toIndex[i]["etat"]:
+                try:
+                    similarity = self.model.similarity(self.text[i]["mot"], motToTest)
+                except:
+                    similarity = 0
                 if similarity > 0.2 and similarity > self.toIndex[i]["percentage"]:
                     self.toIndex[i]["percentage"] = similarity
-                    self.toIndex[i]["classe"] = ["proche"]
+                    self.toIndex[i]["etat"] = ["proche"]
 
-                    if len(mot) <= len(motToTest):
+                    if len(self.text[i]["mot"]) <= len(motToTest):
                         self.toIndex[i]["mot"] = motToTest
-                    elif len(mot) > len(motToTest):
-                        self.toIndex[i]["mot"] = math.floor((len(mot) - len(motToTest))/2) * "#" + motToTest + math.ceil((len(mot) - len(motToTest))/2) * "#"
+                    elif len(self.text[i]["mot"]) > len(motToTest):
+                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * "#" + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * "#"
 
 
-        return toIndex
+        return self.toIndex

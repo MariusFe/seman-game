@@ -9,6 +9,8 @@ send = {}
 @app.route('/new_article', methods=['POST'])
 def new_article():
   texte = _back.getArticle()
+  texte1 = _back.testMot("le")
+  print(texte1)
   
   return render_template('index.html')#, receive=send, receive1 = json.dumps(send))
 
