@@ -34,6 +34,7 @@ class Back:
         # We are getting a random article
         R = s.get(url=URL, params=PARAMS)
         DATA = R.json()
+        page_py = wiki_wiki.page("Bonjour")
         DATA["query"]["random"][0]["title"] = ':'
 
         # If it contains ':' that means it is a discussion, a user or whatever

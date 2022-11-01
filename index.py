@@ -9,16 +9,29 @@ send = {}
 @app.route('/new_article', methods=['POST'])
 def new_article():
   texte = _back.getArticle()
-  texte1 = _back.testMot("le")
-  print(texte1)
+  for i in range(0, len(texte)):
+    send[i] = {
+      "mot": texte[i]["mot"],
+      "classes": texte[i]["etat"],
+      "percentage": texte[i]["mot"]
+    }
+    send[i]["classes"].append(texte[i]["type"])
   
-  return render_template('index.html')#, receive=send, receive1 = json.dumps(send))
+  return render_template('index.html', receive=send, receive1 = json.dumps(send))
 
 
-# @app.route('/submit', methods=['POST'])
-# def submit():
-
-#   return render_template('index.html', receive = send, receive1 = json.dumps(send))
+@app.route('/submit', methods=['POST'])
+def submit():
+  texte = _back.getArticle()
+  for i in range(0, len(texte)):
+    send[i] = {
+      "mot": texte[i]["mot"],
+      "classes": texte[i]["etat"],
+      "percentage": texte[i]["mot"]
+    }
+    send[i]["classes"].append(texte[i]["type"])
+    
+  return render_template('index.html', receive = send, receive1 = json.dumps(send))
 
 @app.route('/')
 def home():
