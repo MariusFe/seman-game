@@ -6,12 +6,13 @@ import math
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
         self.nb_paragraphes = nb_paragraphes
         self.model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
+        self.trigger_similarity = trigger_similarity
 
     def getArticle(self):
         #Creating the session and preparing the url
@@ -40,24 +41,13 @@ class Back:
         while re.compile(r':').findall(DATA["query"]["random"][0]["title"]):
             R = s.get(url=URL, params=PARAMS)
             DATA = R.json()
-            # print(DATA["query"]["random"][0]["title"])
             page_py = wiki_wiki.page(DATA["query"]["random"][0]["title"])
-            # print(len(page_py.text.split(" ")))
             # If the article has less words than 'taille_article' words we add ':' to the title to loop again
             if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
-        # We split in paragraphs (may be useful later) and spaces 
-        # paragraphes = page_py.text.split("\n")[:self.nombre_paragraphes]
-        # paragraphes = [re.split(r" ", par) for par in paragraphes]
-
-
-
-
-
         self.text = {}
         self.toIndex = {}
-        self.taille_titre = len(DATA["query"]["random"][0]["title"].split(" "))
 
         i=0
         for mot in DATA["query"]["random"][0]["title"].split(" "):
@@ -104,11 +94,12 @@ class Back:
         try: 
             self.model.similarity("bonjour", motToTest)
         except:
-            print("Le mot n'existe pas")
+            return self.toIndex
 
-        i = 0
         for i in range(0, len(self.text)):
-            if self.text[i]["mot"] == motToTest:
+            if self.toIndex[i]["character"] == True:
+                pass
+            elif self.text[i]["mot"] == motToTest:
                 self.toIndex[i]["mot"] = self.text[i]["mot"]
                 self.toIndex[i]["etat"] = ["trouve", "new_trouve"]
 
@@ -123,7 +114,7 @@ class Back:
                     similarity = self.model.similarity(self.text[i]["mot"], motToTest)
                 except:
                     similarity = 0
-                if similarity > 0.2 and similarity > self.toIndex[i]["percentage"]:
+                if similarity > self.trigger_similarity and similarity > self.toIndex[i]["percentage"]:
                     self.toIndex[i]["percentage"] = similarity
                     self.toIndex[i]["etat"] = ["proche"]
 
