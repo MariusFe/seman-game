@@ -22,14 +22,18 @@ def new_article():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-  texte = _back.getArticle()
+  print(request.form.get("in_word"))
+  texte = _back.testMot(request.form.get("in_word"))
+  send = {}
   for i in range(0, len(texte)):
     send[i] = {
       "mot": texte[i]["mot"],
       "classes": texte[i]["etat"],
-      "percentage": texte[i]["mot"]
+      "percentage": texte[i]["percentage"]
     }
     send[i]["classes"].append(texte[i]["type"])
+
+  print(send)
     
   return render_template('index.html', receive = send, receive1 = json.dumps(send))
 
