@@ -4,6 +4,26 @@ import re
 from gensim.models import KeyedVectors
 import math
 
+"""
+Back object
+
+- Instantiate the article
+- Contains the article in clear
+- Returns the blured article to the index to be displayed with all the "states" of the words
+- Try a word entered by the user
+
+
+Takes:
+- taille_article, number of words per article we want. We skip the small articles
+- nb_paragraphes, number of paragraphes we take in the article chosen. We avoid to display too much text
+- trigger_similarity, if two words are less than (default) 20% similar we don't show it to the user
+
+TO DO:
+- Split words with characters, example "oui," -> ["oui",","]
+- Work on the trigger
+- Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
+"""
+
 class Back:
 
     def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2):
@@ -47,9 +67,12 @@ class Back:
             if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
+        # This dict is for the Back object, it contains the text in clear and if it is part of the title or not
         self.text = {}
+        # This dict is for the index, text blured or found, has way more information than the previous one
         self.toIndex = {}
 
+        # Loop through the title
         i=0
         for mot in DATA["query"]["random"][0]["title"].split(" "):
             self.text[i] = {
@@ -59,12 +82,14 @@ class Back:
             self.toIndex[i] = {
                 "mot": "#" * len(mot),
                 "type": "titre",
+                # etat can be 'cache', 'trouve', 'proche', 'new_trouve'
                 "etat": ["cache"],
                 "character": False,
                 "percentage": 0
             }
             i += 1
 
+        # Loop through the entire article, we keep i to its preivous value
         for mot in page_py.text.split(" "):
             self.text[i] = {
                 "mot": mot,
@@ -92,37 +117,52 @@ class Back:
 
     def testMot(self, motToTest):
 
+        # We test if the word entered is a real one
         try: 
             self.model.similarity("bonjour", motToTest)
         except:
             return self.toIndex
-
+        
         for i in range(0, len(self.text)):
+            # If it is a character we pass, it shouldn't enter here, redundancy with the previous try
             if self.toIndex[i]["character"] == True:
                 pass
+            # If it is exactly the word we looked for we replace the word by 
             elif self.text[i]["mot"] == motToTest:
                 self.toIndex[i]["mot"] = self.text[i]["mot"]
                 self.toIndex[i]["etat"] = ["trouve", "new_trouve"]
 
+            # If the word has been found previously then we remove the new_trouve (changing back the background color to gray)
             elif "new_trouve" in self.toIndex[i]["etat"]:
                 self.toIndex[i]["etat"] = ["trouve"]
 
             elif "trouve" in self.toIndex[i]["etat"]:
                 pass 
 
+            # We will check for the similarity     
             elif "trouve" not in self.toIndex[i]["etat"]:
+                # We try once again to be sure, redundancy, the last thing we want is the server to crash
                 try:
                     similarity = self.model.similarity(self.text[i]["mot"], motToTest)
                 except:
                     similarity = 0
+                # trigger_smiliraty can be changed based on empirical researchs
+                # If the similarity between the actual word and the word entered is larger than the trigger then we can show it to the user
+                # We also make sure that the similarity is greater than what it actually is. We won't replace a word if it is "further" from a previous tried word
                 if similarity > self.trigger_similarity and similarity > self.toIndex[i]["percentage"]:
                     self.toIndex[i]["percentage"] = similarity
                     self.toIndex[i]["etat"] = ["proche"]
 
+                    # This condition is to check if the tested word is bigger than the actual word or not
+                    # Example: 'être' is the actual word
+                    # 'avoir' is entered: we return 'avoir' because it has more letters than 'être'
+                    # 'es' is entered: we return '#es#' to signify that the actual word is larger than the one entered
                     if len(self.text[i]["mot"]) <= len(motToTest):
                         self.toIndex[i]["mot"] = motToTest
                     elif len(self.text[i]["mot"]) > len(motToTest):
                         self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * "#" + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * "#"
-
+            else:
+                # It shouldn't enter this, if anything we just return the self.toIndex at the end
+                pass
 
         return self.toIndex

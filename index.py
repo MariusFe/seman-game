@@ -2,6 +2,16 @@ from flask import Flask, render_template, request
 import back
 import json
 
+"""
+Index Flask
+
+TO DO
+- Session for users, currently the same article is used for every users
+- Shared session
+- Overall statistics, working with a database ? or simply or global json
+- More ?
+"""
+
 app = Flask(__name__,static_folder=".",static_url_path='')
 _back = back.Back()
 send = {}
@@ -9,13 +19,7 @@ send = {}
 @app.route('/new_article', methods=['POST'])
 def new_article():
   texte = _back.getArticle()
-  for i in range(0, len(texte)):
-    send[i] = {
-      "mot": texte[i]["mot"],
-      "classes": texte[i]["etat"],
-      "percentage": texte[i]["mot"]
-    }
-    send[i]["classes"].append(texte[i]["type"])
+  send = fromBacktoIndex(texte)
   
   return render_template('index.html', receive=send, receive1 = json.dumps(send))
 
@@ -24,14 +28,7 @@ def new_article():
 def submit():
   print(request.form.get("in_word"))
   texte = _back.testMot(request.form.get("in_word"))
-  send = {}
-  for i in range(0, len(texte)):
-    send[i] = {
-      "mot": texte[i]["mot"],
-      "classes": texte[i]["etat"],
-      "percentage": texte[i]["percentage"]
-    }
-    send[i]["classes"].append(texte[i]["type"])
+  send = fromBacktoIndex(texte)
 
   print(send)
     
@@ -40,6 +37,21 @@ def submit():
 @app.route('/')
 def home():
   return render_template('index.html')
+
+
+# This function takes a dict returned from the back to transform it to a json read by the JavaScript in the .html doc
+# We could just directly return the correct format from the Back object I know but that means I need to redo a lot (flemme + ratio)
+
+def fromBacktoIndex(texte):
+  send = {}
+  for i in range(0, len(texte)):
+    send[i] = {
+      "mot": texte[i]["mot"],
+      "classes": texte[i]["etat"],
+      "percentage": texte[i]["percentage"]
+    }
+    send[i]["classes"].append(texte[i]["type"])
+  return send()
 
 
 app.run(port=8080, debug=True)
