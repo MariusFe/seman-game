@@ -11,9 +11,11 @@
     <meta charset="utf-8"/>
     <title> Test</title>
     <script type="text/javascript" src="jquery/js/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="./templates/style.css">
 </head>
     <body>
         <h1>السلام عليكم</h1>
+        <div id="chargement"></div>
         <form action="/new_article" method="post">
             <button id="new" name="new_button" type="submit">
                 New Page
@@ -25,67 +27,46 @@
                 Submit mot
             </button>
         </form>
-        <div id="receive" style="display: none">{% if receive %}{{receive1}}{% endif %}</div>
+        <div id="receive">{% if receive %}{{ receive1 }}{% endif %}</div>
+        
         <p id="titre">
             {% if receive %}
-            {% for word in receive["titre"] %}
-            <span id = {{word["id"]}} class="mot" style=""> {{word["mot"]}}</span>
+            {% for word in receive %}
+            {% if "article" not in receive[word]["classes"] %}
+            <span id = {{ word }} class="mot"> {{ receive[word]["mot"] }}</span>
+            {% endif %}
             {%endfor%}
             {% endif %}
     
         </p>
-
 
         <p id="article">
             {% if receive %}
-            {% for word in receive["article"] %}
-            <span id = {{word["id"]}} class="mot" style=""> {{word["mot"]}}</span>
+            {% for word in receive %}
+            {% if "titre" not in receive[word]["classes"] %}
+            <span id = {{ word }} class="mot"> {{ receive[word]["mot"] }}</span>
+            {% endif %}
             {%endfor%}
             {% endif %}
         </p>
-    
 
         
     </body>
 
+    <script>
+        /* C'est un bordel mais ça marche */
+        $(document).ready(function() {
+            console.log(new Date() + ": Document ready");
+            var jison = JSON.parse(document.getElementById("receive").innerHTML);
+            for(let i = 0; i< Object.keys(jison).length; i = i+1){
+                for (var classe in jison[i]["classes"]){
+                    document.getElementById(i).classList.add(jison[i]["classes"][classe]);
+                }
+            }
+        });
 
-        <!-- >
-            To be replaced with classes and a .css document
-            We loop through the json, add the text and the classes
-            The .css takes the rest
-
-        {%if receive%}
-        <script>
-            $(document).ready(function() {
-                var jison = JSON.parse(document.getElementById("receive").innerHTML);
-                jison["titre"].forEach(element => {
-                    element["classes"].forEach(classe =>{
-                        document.getElementById(element["id"]).style.fontSize = "2.5em";
-                        document.getElementById(element["id"]).style.fontWeight = "bold";
-                        switch (classe){
-                            case  "cache":
-                                document.getElementById(element["id"]).style.backgroundColor = "rgb(60,60,60)";
-                                break;
-                            default:
-                        }
-                        
-                    });
-                });
-                jison["article"].forEach(element => {
-                    element["classes"].forEach(classe =>{
-                        document.getElementById(element["id"]).style.fontSize = "1em";
-                        switch (classe){
-                            case  "cache":
-                                document.getElementById(element["id"]).style.backgroundColor = "rgb(60,60,60)";
-                                break;
-                            default:
-                        }
-                        
-                    });
-                });
-            });
-                
-        </script>
-        {% endif %}
-        <-->
+        $("#new").click(function() {
+            document.getElementById("chargement").innerHTML = "Chargement...";
+        });
+    </script>
 </html>

@@ -13,8 +13,7 @@ TO DO
 """
 
 app = Flask(__name__,static_folder=".",static_url_path='')
-_back = back.Back()
-send = {}
+_back = back.Back(returned_size=100)
 
 @app.route('/new_article', methods=['POST'])
 def new_article():
@@ -30,9 +29,9 @@ def submit():
   texte = _back.testMot(request.form.get("in_word"))
   send = fromBacktoIndex(texte)
 
-  print(send)
+  # print(send)
     
-  return render_template('index.html', receive = send, receive1 = json.dumps(send))
+  return render_template('index.html', receive=send, receive1 = json.dumps(send))
 
 @app.route('/')
 def home():
@@ -46,12 +45,15 @@ def fromBacktoIndex(texte):
   send = {}
   for i in range(0, len(texte)):
     send[i] = {
+      "id": i,
       "mot": texte[i]["mot"],
       "classes": texte[i]["etat"],
       "percentage": texte[i]["percentage"]
     }
     send[i]["classes"].append(texte[i]["type"])
-  return send()
+    if texte[i]["character"] == True:
+      send[i]["classes"].append("character")
+  return send
 
 
 app.run(port=8080, debug=True)

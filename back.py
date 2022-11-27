@@ -16,7 +16,8 @@ Back object
 Takes:
 - taille_article, number of words per article we want. We skip the small articles
 - nb_paragraphes, number of paragraphes we take in the article chosen. We avoid to display too much text
-- trigger_similarity, if two words are less than (default) 20% similar we don't show it to the user
+- trigger_similarity, if two words are less than (default, to be adjusted) 20% similar we don't show it to the user
+- returned_size, size of the returned json. The number of words that will be displayed on the page (default 100)
 
 TO DO:
 - Split words with characters, example "oui," -> ["oui",","]
@@ -26,13 +27,14 @@ TO DO:
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, returned_size = 100):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
         self.nb_paragraphes = nb_paragraphes
         self.model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
         self.trigger_similarity = trigger_similarity
+        self.returned_size = returned_size
 
     def getArticle(self):
         #Creating the session and preparing the url
@@ -67,10 +69,10 @@ class Back:
             if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
-        # This dict is for the Back object, it contains the text in clear and if it is part of the title or not
+        # This dict is for the Back object only, it contains the text in clear and if it is part of the title or not
         self.text = {}
         # This dict is for the index, text blured or found, has way more information than the previous one
-        self.toIndex = {}
+        to_index = {}
 
         # Loop through the title
         i=0
@@ -79,7 +81,7 @@ class Back:
                 "mot": mot,
                 "titre": True
             }
-            self.toIndex[i] = {
+            to_index[i] = {
                 "mot": "#" * len(mot),
                 "type": "titre",
                 # etat can be 'cache', 'trouve', 'proche', 'new_trouve'
@@ -96,7 +98,7 @@ class Back:
                 "titre": False
             }
             if mot == "\n":
-                self.toIndex[i] = {
+                to_index[i] = {
                     "mot": "%",
                     "type": "article",
                     "etat": ["cache"],
@@ -104,7 +106,7 @@ class Back:
                     "percentage": 0
                 }
             else:
-                self.toIndex[i] = {
+                to_index[i] = {
                     "mot": "#" * len(mot),
                     "type": "article",
                     "etat": ["cache"],
@@ -112,6 +114,11 @@ class Back:
                     "percentage": 0
                 }
             i += 1
+
+        for i in range(0, self.returned_size):
+            self.toIndex[i] = to_index[i]
+
+        print(DATA["query"]["random"][0]["title"])
 
         return self.toIndex
 
@@ -123,7 +130,7 @@ class Back:
         except:
             return self.toIndex
         
-        for i in range(0, len(self.text)):
+        for i in range(0, len(self.toIndex)):
             # If it is a character we pass, it shouldn't enter here, redundancy with the previous try
             if self.toIndex[i]["character"] == True:
                 pass
@@ -139,7 +146,7 @@ class Back:
             elif "trouve" in self.toIndex[i]["etat"]:
                 pass 
 
-            # We will check for the similarity     
+            # We will check for the similarity if the word is not found already
             elif "trouve" not in self.toIndex[i]["etat"]:
                 # We try once again to be sure, redundancy, the last thing we want is the server to crash
                 try:
@@ -150,7 +157,7 @@ class Back:
                 # If the similarity between the actual word and the word entered is larger than the trigger then we can show it to the user
                 # We also make sure that the similarity is greater than what it actually is. We won't replace a word if it is "further" from a previous tried word
                 if similarity > self.trigger_similarity and similarity > self.toIndex[i]["percentage"]:
-                    self.toIndex[i]["percentage"] = similarity
+                    self.toIndex[i]["percentage"] = float(similarity)
                     self.toIndex[i]["etat"] = ["proche"]
 
                     # This condition is to check if the tested word is bigger than the actual word or not
