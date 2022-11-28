@@ -18,6 +18,7 @@ Takes:
 - nb_paragraphes, number of paragraphes we take in the article chosen. We avoid to display too much text
 - trigger_similarity, if two words are less than (default, to be adjusted) 20% similar we don't show it to the user
 - returned_size, size of the returned json. The number of words that will be displayed on the page (default 100)
+- (not implemented) trigger_exact, if the similarity two words are over this value that means it deserves to be shown as the exact same word ("être" == "est")
 
 TO DO:
 - Split words with characters, example "oui," -> ["oui",","]
@@ -27,7 +28,7 @@ TO DO:
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, returned_size = 100):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, returned_size = 100, trigger_exact = 0.58):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
@@ -35,6 +36,7 @@ class Back:
         self.model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
         self.trigger_similarity = trigger_similarity
         self.returned_size = returned_size
+        self.trigger_exact = trigger_exact
 
     def getArticle(self):
         #Creating the session and preparing the url
@@ -75,8 +77,9 @@ class Back:
         to_index = {}
 
         # Loop through the title
+        # re.split('(\W)', string) splits between words and every other character
         i=0
-        for mot in DATA["query"]["random"][0]["title"].split(" "):
+        for mot in re.split('(\W)',DATA["query"]["random"][0]["title"]):
             self.text[i] = {
                 "mot": mot,
                 "titre": True
@@ -86,33 +89,34 @@ class Back:
                 "type": "titre",
                 # etat can be 'cache', 'trouve', 'proche', 'new_trouve'
                 "etat": ["cache"],
-                "character": False,
                 "percentage": 0
             }
+            if(mot.isalpha() == True): # if the string contains only alpha characters or not (includes accents and weird characters used in the silly french language)
+                to_index[i]["character"] = False
+            else:
+                to_index[i]["mot"] = mot
+                to_index[i]["character"] = True
+            
             i += 1
 
         # Loop through the entire article, we keep i to its preivous value
-        for mot in page_py.text.split(" "):
+        for mot in re.split('(\W)', page_py.text):
             self.text[i] = {
                 "mot": mot,
                 "titre": False
             }
-            if mot == "\n":
-                to_index[i] = {
-                    "mot": "%",
-                    "type": "article",
-                    "etat": ["cache"],
-                    "character": True,
-                    "percentage": 0
-                }
+            to_index[i] = {
+                "mot": "#" * len(mot),
+                "type": "article",
+                "etat": ["cache"],
+                "percentage": 0
+            }
+            
+            if(mot.isalpha() == True):
+                to_index[i]["character"] = False
             else:
-                to_index[i] = {
-                    "mot": "#" * len(mot),
-                    "type": "article",
-                    "etat": ["cache"],
-                    "character": False,
-                    "percentage": 0
-                }
+                to_index[i]["mot"] = mot
+                to_index[i]["character"] = True
             i += 1
 
         for i in range(0, self.returned_size):
@@ -126,7 +130,7 @@ class Back:
 
         # We test if the word entered is a real one
         try: 
-            self.model.similarity("bonjour", motToTest)
+            self.model.similarity("bonjour", str(motToTest).lower())
         except:
             return self.toIndex
         
@@ -135,7 +139,7 @@ class Back:
             if self.toIndex[i]["character"] == True:
                 pass
             # If it is exactly the word we looked for we replace the word by 
-            elif self.text[i]["mot"] == motToTest:
+            elif str(self.text[i]["mot"]).lower() == str(motToTest).lower():
                 self.toIndex[i]["mot"] = self.text[i]["mot"]
                 self.toIndex[i]["etat"] = ["trouve", "new_trouve"]
 
@@ -150,13 +154,14 @@ class Back:
             elif "trouve" not in self.toIndex[i]["etat"]:
                 # We try once again to be sure, redundancy, the last thing we want is the server to crash
                 try:
-                    similarity = self.model.similarity(self.text[i]["mot"], motToTest)
+                    similarity = self.model.similarity(str(self.text[i]["mot"]).lower(), str(motToTest).lower())
                 except:
                     similarity = 0
                 # trigger_smiliraty can be changed based on empirical researchs
                 # If the similarity between the actual word and the word entered is larger than the trigger then we can show it to the user
                 # We also make sure that the similarity is greater than what it actually is. We won't replace a word if it is "further" from a previous tried word
                 if similarity > self.trigger_similarity and similarity > self.toIndex[i]["percentage"]:
+                    print(f'Mot entré: {motToTest}, Mot du texte: {self.text[i]["mot"]}, similarité: {similarity}')
                     self.toIndex[i]["percentage"] = float(similarity)
                     self.toIndex[i]["etat"] = ["proche"]
 

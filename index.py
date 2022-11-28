@@ -28,8 +28,6 @@ def submit():
   print(request.form.get("in_word"))
   texte = _back.testMot(request.form.get("in_word"))
   send = fromBacktoIndex(texte)
-
-  # print(send)
     
   return render_template('index.html', receive=send, receive1 = json.dumps(send))
 
