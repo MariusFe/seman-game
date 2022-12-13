@@ -91,7 +91,7 @@ class Back:
                 "etat": ["cache"],
                 "percentage": 0
             }
-            if(mot.isalpha() == True): # if the string contains only alpha characters or not (includes accents and weird characters used in the silly french language)
+            if(mot.isalpha() == True or mot.isnumeric()): # if the string contains only alpha characters or not (includes accents and weird characters used in the silly french language)
                 to_index[i]["character"] = False
             else:
                 to_index[i]["mot"] = mot
@@ -112,12 +112,15 @@ class Back:
                 "percentage": 0
             }
             
-            if(mot.isalpha() == True):
+            if(mot.isalpha() == True or mot.isnumeric()):
                 to_index[i]["character"] = False
             else:
                 to_index[i]["mot"] = mot
                 to_index[i]["character"] = True
             i += 1
+
+        if self.returned_size > self.taille_article:
+            self.returned_size = self.taille_article
 
         for i in range(0, self.returned_size):
             self.toIndex[i] = to_index[i]
@@ -128,11 +131,11 @@ class Back:
 
     def testMot(self, motToTest):
 
-        # We test if the word entered is a real one
-        try: 
-            self.model.similarity("bonjour", str(motToTest).lower())
-        except:
-            return self.toIndex
+        # We test if the word entered is a real one (COMMENTED because it was not working with proper nouns, it is checked further anyway)
+        # try: 
+        #     self.model.similarity("bonjour", str(motToTest).lower())
+        # except:
+        #     return self.toIndex
         
         for i in range(0, len(self.toIndex)):
             # If it is a character we pass, it shouldn't enter here, redundancy with the previous try

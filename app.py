@@ -13,7 +13,7 @@ TO DO
 """
 
 app = Flask(__name__,static_folder=".",static_url_path='')
-_back = back.Back(returned_size=100)
+_back = back.Back(returned_size=300)
 
 @app.route('/new_article', methods=['POST'])
 def new_article():
