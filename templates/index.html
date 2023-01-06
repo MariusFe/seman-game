@@ -11,6 +11,7 @@
     <meta charset="utf-8" name="viewport" content="inital-scale=1, width=device-width">
     <title> Test</title>
     <script type="text/javascript" src="jquery/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="scripts/script.js"></script>
     <link rel="stylesheet" href="./templates/style.css">
 </head>
     <body>
@@ -64,21 +65,4 @@
 
         
     </body>
-
-    <script>
-        /* C'est un bordel mais ça marche */
-        $(document).ready(function() {
-            console.log(new Date() + ": Document ready");
-            var jison = JSON.parse(document.getElementById("receive").innerHTML);
-            for(let i = 0; i< Object.keys(jison).length; i = i+1){
-                for (var classe in jison[i]["classes"]){
-                    document.getElementById(i).classList.add(jison[i]["classes"][classe]);
-                }
-            }
-        });
-
-        $("#new").click(function() {
-            document.getElementById("chargement").innerHTML = "Chargement...";
-        });
-    </script>
 </html>
