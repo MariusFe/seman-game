@@ -15,12 +15,12 @@ TO DO
 app = Flask(__name__,static_folder=".",static_url_path='')
 _back = back.Back(returned_size=300)
 
-@app.route('/new_article', methods=['POST'])
+@app.route('/new_article')
 def new_article():
   texte = _back.getArticle()
   send = fromBacktoIndex(texte)
   
-  return render_template('index.html', receive=send, receive1 = json.dumps(send))
+  return json.dumps(send)
 
 
 @app.route('/submit', methods=['POST'])
@@ -29,7 +29,7 @@ def submit():
   texte = _back.testMot(request.form.get("in_word"))
   send = fromBacktoIndex(texte)
     
-  return render_template('index.html', receive=send, receive1 = json.dumps(send))
+  return json.dumps(send)
 
 @app.route('/')
 def home():
