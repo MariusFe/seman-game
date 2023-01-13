@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import scripts.back as back
+import static.python.back as back
 import json
 
 """
@@ -12,7 +12,7 @@ TO DO
 - More ?
 """
 
-app = Flask(__name__,static_folder=".",static_url_path='')
+app = Flask(__name__,template_folder= ".")
 _back = back.Back(returned_size=300)
 
 @app.route('/new_article')

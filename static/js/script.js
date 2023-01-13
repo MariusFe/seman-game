@@ -7,15 +7,29 @@ $(document).ready(function() {
             document.getElementById(i).classList.add(jison[i]["classes"][classe]);
         }
     }*/
+
+    $("#new").click(function() {
+        document.getElementById("chargement").innerHTML = "Chargement...";
+        $("titre").html("Oui");
+        $("article").html("Non");
+    
+        fetch('/new_article').then(response =>{
+            console.log(response);
+        })
+            .then(data => {
+            console.log(data); 
+            document.getElementById("chargement").innerHTML = "";
+            $("titre").html(data);
+            $("article").html(data);
+        });
+    });
+
+    $("#submit_word").click(function(){
+
+    });
 });
 
-$("#new").click(function() {
-    document.getElementById("chargement").innerHTML = "Chargement...";
 
-    fetch('/new_article').then(data =>{
-        console.log(data);
-    })
-});
 
 /*
 <div id="receive">{% if receive %}{{ receive1 }}{% endif %}</div>
