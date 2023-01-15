@@ -1,6 +1,13 @@
-/* C'est un bordel mais ça marche */
+/*
+    Script for script.js
+*/
+
+// Variables globales
+// Id utiles
+var chargement, titre, article;
+
+
 $(document).ready(function() {
-    console.log(new Date() + ": Document ready");
     /*var jison = JSON.parse(document.getElementById("receive").innerHTML);
     for(let i = 0; i< Object.keys(jison).length; i = i+1){
         for (var classe in jison[i]["classes"]){
@@ -8,28 +15,58 @@ $(document).ready(function() {
         }
     }*/
 
+    chargement = document.getElementById("chargement");
+    titre = document.getElementById("titre");
+    article = document.getElementById("article");
+
+    // Génération d'un nouvel article
     $("#new").click(function() {
-        document.getElementById("chargement").innerHTML = "Chargement...";
-        $("titre").html("Oui");
-        $("article").html("Non");
-    
-        fetch('/new_article').then(response =>{
-            console.log(response);
+        chargement.innerHTML = "Chargement...";
+        axios.get('/new_article')
+            .then(function (response) {
+            // handle success
+            chargement.innerHTML = "";
+            console.log(response.data);
+            updateTitreArticle(response.data);
         })
-            .then(data => {
-            console.log(data); 
-            document.getElementById("chargement").innerHTML = "";
-            $("titre").html(data);
-            $("article").html(data);
+            .catch(function (error) {
+            // handle error
+            console.log(error);
+            chargement.innerHTML = "Erreur lors du chargement de la page.";
         });
     });
 
+    // Soumission d'un mot
     $("#submit_word").click(function(){
-
+        chargement.innerHTML = "Chargement...";
+        const motToTest = document.getElementById("word");
+        axios.post('/submit',{
+            "in_word": motToTest.value
+        })
+            .then(function (response) {
+            // handle success
+            chargement.innerHTML = "";
+            console.log(response.data);
+            motToTest.value = "";
+            updateTitreArticle(response.data);
+        })
+            .catch(function (error) {
+            // handle error
+            console.log(error);
+            chargement.innerHTML = "Erreur lors du chargement de la page.";
+        });
     });
 });
 
+function updateTitreArticle(data){
+    article.innerHTML = "";
+    titre.innerHTML = "";
+    //Update
 
+    for(let i = 0; i<Object.keys(data).length; i = i+1){
+        console.log(data[i]);
+    }
+};
 
 /*
 <div id="receive">{% if receive %}{{ receive1 }}{% endif %}</div>

@@ -25,8 +25,8 @@ def new_article():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-  print(request.form.get("in_word"))
-  texte = _back.testMot(request.form.get("in_word"))
+  print(request.get_json()['in_word'])
+  texte = _back.testMot(request.get_json()['in_word'])
   send = fromBacktoIndex(texte)
     
   return json.dumps(send)
