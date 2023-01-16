@@ -8,12 +8,6 @@ var chargement, titre, article;
 
 
 $(document).ready(function() {
-    /*var jison = JSON.parse(document.getElementById("receive").innerHTML);
-    for(let i = 0; i< Object.keys(jison).length; i = i+1){
-        for (var classe in jison[i]["classes"]){
-            document.getElementById(i).classList.add(jison[i]["classes"][classe]);
-        }
-    }*/
 
     chargement = document.getElementById("chargement");
     titre = document.getElementById("titre");
@@ -26,7 +20,6 @@ $(document).ready(function() {
             .then(function (response) {
             // handle success
             chargement.innerHTML = "";
-            console.log(response.data);
             updateTitreArticle(response.data);
         })
             .catch(function (error) {
@@ -46,7 +39,6 @@ $(document).ready(function() {
             .then(function (response) {
             // handle success
             chargement.innerHTML = "";
-            console.log(response.data);
             motToTest.value = "";
             updateTitreArticle(response.data);
         })
@@ -64,43 +56,22 @@ function updateTitreArticle(data){
     //Update
 
     for(let i = 0; i<Object.keys(data).length; i = i+1){
-        console.log(data[i]);
+        const mot = document.createElement("span");
+        mot.id = i;
+        data[i].classes.forEach(classe => {
+            mot.classList.add(classe);
+        });
+
+        if(data[i].mot == " "){
+            mot.innerHTML = "&nbsp";
+        } else {
+            mot.innerHTML = data[i].mot;
+        }
+    
+        if(data[i].classes.includes("titre")){
+            titre.appendChild(mot);
+        } else {
+            article.appendChild(mot);
+        }
     }
 };
-
-/*
-<div id="receive">{% if receive %}{{ receive1 }}{% endif %}</div>
-        
-        <p id="titre">
-            {% if receive %}
-                {% for word in receive %}
-                    {% if "article" not in receive[word]["classes"] %}
-                        {% if receive[word]["mot"] == " " %}
-            <span id = {{ word }} class="mot">&nbsp;</span>
-                        {% else %}
-                            {% if receive[word]["mot"] == "\n" %}
-            <br>          
-                            {% else %}
-            <span id = {{ word }} class="">{{ receive[word]["mot"] }}</span>
-                            {% endif %}
-                        {% endif %}        
-                    {% endif %}
-                {%endfor%}
-            {% endif %}
-    
-        </p>
-
-        <p id="article">
-            {% if receive %}
-                {% for word in receive %}
-                    {% if "titre" not in receive[word]["classes"] %}
-                        {% if receive[word]["mot"] == " " %}
-            <span id = {{ word }} class="mot">&nbsp;</span>
-                        {% else %}
-            <span id = {{ word }} class="">{{ receive[word]["mot"] }}</span>
-                        {% endif %}        
-                    {% endif %}
-                {%endfor%}
-            {% endif %}
-        </p>
-        */
