@@ -36,11 +36,9 @@ EVERY GODDAM THING */
 #receive {
     display: none;
 }
-p {
-    width: 100%;
+p > span {
     display: inline-block;
 }
-
-/*body > h1:first-of-type{
-    text-align: right;
-}*/
+p > span:not(:first-of-type) {
+    margin-top: 5px;
+}
