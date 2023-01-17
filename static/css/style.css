@@ -7,6 +7,14 @@ EVERY GODDAM THING */
     Keep new_trouve before trouve
     Character goes in priority too
 */
+
+body{
+    background-color: #1d1d1d;
+    color: lightgrey;
+    text-align: center;
+    font-size: 1.5em;
+}
+
 .titre {
     font-size: 2.5em; 
     font-weight: bold;
@@ -29,7 +37,7 @@ EVERY GODDAM THING */
     background-color: white;
 }
 .proche {
-    background-color: rgb(67, 67, 207);
+    background-color: rgb(60,60,60);
 }
 
 /* The rest */
@@ -38,9 +46,11 @@ EVERY GODDAM THING */
 }
 p > span {
     display: inline-block;
+    padding: 5px;
 }
-p > span:not(:first-of-type) {
+p > span:not(:first-of-type):not(.character) { /* hihi comme ça on ne le fait pas sur les characters (se prononce engine) */
     margin-top: 5px;
+    margin-left: 5px;
 }
 
 /* Affcihage mots en fonction de l'état du pourcentage d'accuracy */
@@ -58,3 +68,8 @@ p > span:not(:first-of-type) {
 }
 
 
+#letsplay{
+    background-color: lightgrey;
+    border-radius: 20px;
+    padding: 20px;
+}

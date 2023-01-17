@@ -29,6 +29,16 @@ $(document).ready(function() {
         });
     });
 
+    document.getElementById("word").addEventListener("keypress", function(event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+          // Cancel the default action, if needed
+          event.preventDefault();
+          // Trigger the button element with a click
+          document.getElementById("submit_word").click();
+        }
+      }); 
+
     // Soumission d'un mot
     $("#submit_word").click(function(){
         chargement.innerHTML = "Chargement...";
@@ -53,25 +63,24 @@ $(document).ready(function() {
 function updateTitreArticle(data){
     article.innerHTML = "";
     titre.innerHTML = "";
-    //Update
-
-    for(let i = 0; i<Object.keys(data).length; i = i+1){
+        
+    for(let i in data){
         const mot = document.createElement("span");
-        mot.id = i;
-        data[i].classes.forEach(classe => {
-            mot.classList.add(classe);
-        });
+        //mot.id = i;
+        
+        if(data[i].mot.trim() != "") //avoid writing sapces in my beatiful cemantix game
+        {
 
-        if(data[i].mot == " "){
-            mot.innerHTML = "&nbsp";
-        } else {
-            mot.innerHTML = data[i].mot;
-        }
-    
-        if(data[i].classes.includes("titre")){
-            titre.appendChild(mot);
-        } else {
-            article.appendChild(mot);
+            data[i].classes.forEach(classe => {
+                mot.classList.add(classe);
+            });
+
+            mot.innerHTML = data[i].mot.trim(); //save the word
+        
+            if(data[i].classes.includes("titre"))
+                titre.appendChild(mot);
+            else 
+                article.appendChild(mot);
         }
     }
 };
