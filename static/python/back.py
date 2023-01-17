@@ -28,7 +28,7 @@ TO DO:
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, returned_size = 100, trigger_exact = 0.58):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 100, trigger_exact = 0.58):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
@@ -37,6 +37,8 @@ class Back:
         self.trigger_similarity = trigger_similarity
         self.returned_size = returned_size
         self.trigger_exact = trigger_exact
+        self.nb_states = nb_states
+        self.max_similarity_states = max_similarity_states
 
     def getArticle(self):
         #Creating the session and preparing the url
@@ -166,7 +168,23 @@ class Back:
                 if similarity > self.trigger_similarity and similarity > self.toIndex[i]["percentage"]:
                     print(f'Mot entré: {motToTest}, Mot du texte: {self.text[i]["mot"]}, similarité: {similarity}')
                     self.toIndex[i]["percentage"] = float(similarity)
-                    self.toIndex[i]["etat"] = ["proche"]
+                    step = (self.max_similarity_states-self.trigger_similarity) / self.nb_states
+                    
+                    if(similarity <= self.trigger_similarity+step):
+                        self.toIndex[i]["etat"] = ["pastop"]
+
+                    elif(similarity <= self.trigger_similarity+step*2):
+                        self.toIndex[i]["etat"] = ["mitop"]
+
+                    elif(similarity <= self.trigger_similarity+step*3):
+                        self.toIndex[i]["etat"] = ["top"]
+
+                    else:
+                        self.toIndex[i]["etat"] = ["top"]
+
+                    self.toIndex[i]["etat"].append("proche")
+
+
 
                     # This condition is to check if the tested word is bigger than the actual word or not
                     # Example: 'être' is the actual word

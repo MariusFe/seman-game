@@ -42,3 +42,19 @@ p > span {
 p > span:not(:first-of-type) {
     margin-top: 5px;
 }
+
+/* Affcihage mots en fonction de l'état du pourcentage d'accuracy */
+
+.pastop{
+    color: red;
+}
+
+.mitop{
+    color: orange;
+}
+
+.top{
+    color: yellow;
+}
+
+
