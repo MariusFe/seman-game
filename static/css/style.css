@@ -13,7 +13,50 @@ body{
     color: lightgrey;
     text-align: center;
     font-size: 1.5em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+h1{
+    font-size: 2em;
+}
+
+
+
+button{
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 10px 20px;
+    color: lightgrey;
+    font-size: 1.5em;
+    transition: 1s;
+    width: min(350px, 90vw);
+    margin: 20px auto;
+}
+
+button:hover{
+    cursor: pointer;
+    color: #00abc2;
+    font-size: 1.5em;
+}
+
+input{
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 20px 2vw;
+    color: #00abc2;
+    font-size: 1.5em;
+    transition: 1s;
+    transition: 0.5s;
+    margin: 20px auto;
+    width: min(500px, 80vw);
+}
+
+input:focus{
+    border-color: white;
+}
+
 
 .titre {
     font-size: 2.5em; 
@@ -25,16 +68,17 @@ body{
     border-radius: 5px;
 }
 .character {
-    background-color: white !important;
+    color: rgb(100,100,100);
 }
-.cache {
+.cache:not(.character) {
     background-color: rgb(60,60,60);
 }
 .new_trouve {
-    background-color: green;
+    animation-duration: 3s;
+    animation: trouvein;
 }
 .trouve {
-    background-color: white;
+    color: rgb(60,60,60);
 }
 .proche {
     background-color: rgb(60,60,60);
@@ -48,9 +92,12 @@ p > span {
     display: inline-block;
     padding: 5px;
 }
-p > span:not(:first-of-type):not(.character) { /* hihi comme ça on ne le fait pas sur les characters (se prononce engine) */
+p > span{
     margin-top: 5px;
-    margin-left: 5px;
+}
+
+.character{
+    margin: auto -5px;
 }
 
 /* Affcihage mots en fonction de l'état du pourcentage d'accuracy */
@@ -69,7 +116,18 @@ p > span:not(:first-of-type):not(.character) { /* hihi comme ça on ne le fait p
 
 
 #letsplay{
+    margin-top: 20px;
     background-color: lightgrey;
     border-radius: 20px;
     padding: 20px;
 }
+
+
+@keyframes trouvein {
+    from {
+        background-color: green;
+    }
+    to {
+        background-color: transparent;
+    }
+  }

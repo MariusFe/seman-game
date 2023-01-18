@@ -28,7 +28,7 @@ TO DO:
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 100, trigger_exact = 0.58):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 100, trigger_exact = 0.58, unknownchar="•"):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
@@ -39,6 +39,7 @@ class Back:
         self.trigger_exact = trigger_exact
         self.nb_states = nb_states
         self.max_similarity_states = max_similarity_states
+        self.unknownchar = unknownchar
 
     def getArticle(self):
         #Creating the session and preparing the url
@@ -87,7 +88,7 @@ class Back:
                 "titre": True
             }
             to_index[i] = {
-                "mot": "#" * len(mot),
+                "mot": self.unknownchar * len(mot),
                 "type": "titre",
                 # etat can be 'cache', 'trouve', 'proche', 'new_trouve'
                 "etat": ["cache"],
@@ -108,7 +109,7 @@ class Back:
                 "titre": False
             }
             to_index[i] = {
-                "mot": "#" * len(mot),
+                "mot": self.unknownchar * len(mot),
                 "type": "article",
                 "etat": ["cache"],
                 "percentage": 0
@@ -193,7 +194,7 @@ class Back:
                     if len(self.text[i]["mot"]) <= len(motToTest):
                         self.toIndex[i]["mot"] = motToTest
                     elif len(self.text[i]["mot"]) > len(motToTest):
-                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * "#" + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * "#"
+                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * self.unknownchar + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * "#"
             else:
                 # It shouldn't enter this, if anything we just return the self.toIndex at the end
                 pass

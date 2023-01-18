@@ -70,7 +70,6 @@ function updateTitreArticle(data){
         
         if(data[i].mot.trim() != "") //avoid writing sapces in my beatiful cemantix game
         {
-
             data[i].classes.forEach(classe => {
                 mot.classList.add(classe);
             });
