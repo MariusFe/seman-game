@@ -44,7 +44,7 @@ $(document).ready(function() {
         chargement.innerHTML = "Chargement...";
         const motToTest = document.getElementById("word");
         axios.post('/submit',{
-            "in_word": motToTest.value
+            "in_word": motToTest.value.trim()
         })
             .then(function (response) {
             // handle success

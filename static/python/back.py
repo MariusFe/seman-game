@@ -194,7 +194,7 @@ class Back:
                     if len(self.text[i]["mot"]) <= len(motToTest):
                         self.toIndex[i]["mot"] = motToTest
                     elif len(self.text[i]["mot"]) > len(motToTest):
-                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * self.unknownchar + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * "#"
+                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * self.unknownchar + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * self.unknownchar
             else:
                 # It shouldn't enter this, if anything we just return the self.toIndex at the end
                 pass
