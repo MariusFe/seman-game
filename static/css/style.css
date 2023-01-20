@@ -20,8 +20,6 @@ h1{
     font-size: 2em;
 }
 
-
-
 button{
     background-color: transparent;
     border-radius: 20px;
@@ -84,6 +82,7 @@ input:focus{
 }
 .character {
     color: rgb(100,100,100);
+    user-select: none;
 }
 .cache:not(.character) {
     background-color: rgb(60,60,60);
@@ -111,7 +110,7 @@ p > span {
 }
 
 .character{
-    margin: auto -5px;
+    margin: auto -7px;
 }
 
 /* Affcihage mots en fonction de l'état du pourcentage d'accuracy */
@@ -144,4 +143,59 @@ p > span {
     to {
         background-color: transparent;
     }
+}
+
+
+#chargement{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    background-color: #000000cc;
+    top: 0;
+    left: 0;
+}
+
+#chargement::before, #chargement::after{
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+
+#chargement::after {
+    content: "•";
+    width: 10vw;
+    height: 10vw;
+    margin-top: -5vw;
+    margin-left: -5vw;
+    border-top: 1vw dotted #3498db;
+    border-right: 0 solid #3498db;
+    border-left: 0 solid #3498db;
+    border-bottom: 1vw dotted #3498db;
+    animation: spin 5s linear infinite;
+
+    line-height: 8vw;
+    color: white;
+    font-size: 10vw;
+}
+
+#chargement::before {
+    width: 20vw;
+    height: 20vw;
+    margin-top: -14vw;
+    margin-left: -12vw;
+    border-top: 5vw solid #f3f3f3;
+    border-right: 2vw solid #f3f3f3;
+    border-left: 2vw solid #f3f3f3;
+    border-bottom: 5vw solid #f3f3f3;
+    animation: spin 3s linear infinite reverse;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% {opacity: 0.5;}
+    100% { transform: rotate(360deg); opacity: 1; }
   }
