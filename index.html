@@ -13,25 +13,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="./static/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./static/css/style.css">
 </head>
     <body>
         <h1>Bienvenue dans la ligue des légendes</h1>
         <div id="chargement"></div>
         <div>
-            <button id="new" name="new_button" type="submit">
-                    New Page
-            </button>
-        </div>
-        <div>
-            <input type="text" id="word" name="in_word" placeholder="Mot" autofocus>
+            <input type="text" id="word" name="in_word" placeholder="Mot">
                 <button id="submit_word" name="submit_word" type="submit">
                     Submit mot
                 </button>
         </div>
 
-        <p id="titre"></p>
-        
-        <p id="article"></p>
+        <div id="letsplay">
+            <p id="titre"></p>
+            
+            <p id="article"></p>
+        </div>
     </body>
 </html>
