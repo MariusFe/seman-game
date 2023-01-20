@@ -66,19 +66,18 @@ function updateArticle(data){
         const mot = document.createElement("span");
         //mot.id = i;
         
-        if(data[i].mot.trim() != "") //avoid writing sapces in my beatiful cemantix game
-        {
-            data[i].classes.forEach(classe => {
-                mot.classList.add(classe);
-            });
 
-            mot.innerHTML = data[i].mot.trim(); //save the word
-        
-            if(data[i].classes.includes("titre"))
-                titre.appendChild(mot);
-            else 
-                article.appendChild(mot);
-        }
+        data[i].classes.forEach(classe => {
+            mot.classList.add(classe);
+        });
+
+        mot.innerHTML = data[i].mot.trim(); //save the word
+    
+        if(data[i].classes.includes("titre"))
+            titre.appendChild(mot);
+        else 
+            article.appendChild(mot);
+
     }
 };
 
