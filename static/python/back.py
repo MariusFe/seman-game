@@ -202,3 +202,12 @@ class Back:
                 pass
 
         return self.toIndex
+
+    def tricher(self):
+        for i in range(0, len(self.toIndex)):
+            if(self.toIndex[i]["character"]) == True:
+                pass
+            else:
+                self.toIndex[i]["etat"] = ["trouve"]
+                self.toIndex[i]["mot"] = self.text[i]["mot"]
+        return self.toIndex

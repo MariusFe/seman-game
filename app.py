@@ -12,7 +12,7 @@ TO DO
 - More ?
 """
 
-app = Flask(__name__,template_folder= ".")
+app = Flask(__name__,template_folder= "./static/html")
 _back = back.Back(returned_size=300)
 
 @app.route('/new_article')
@@ -34,6 +34,16 @@ def submit():
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/tricher')
+def tricher():
+    texte = _back.tricher()
+    send  = fromBacktoIndex(texte)
+    return json.dumps(send)
+
+@app.route('/selectArticle')
+def selectArticle():
+    return render_template('selectArticle.html')
 
 
 # This function takes a dict returned from the back to transform it to a json read by the JavaScript in the .html doc

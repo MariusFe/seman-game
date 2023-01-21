@@ -59,9 +59,7 @@ input:focus{
     justify-content: center;
 }
 
-#article{
-    justify-content: space-between;
-}
+
 
 #titre > span{
     font-size: 2.5em; 
@@ -74,7 +72,6 @@ input:focus{
     border-radius: 5px;
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
 }
 #article::after {
     content: "";
@@ -104,14 +101,15 @@ input:focus{
 }
 p > span {
     display: inline-block;
-    padding: 5px;
     margin-top: 5px;
     border-radius: 5px;
+    gap: 1px;
 }
 
-.character{
-    margin: auto -7px;
+#article{
+    justify-content: normal;
 }
+
 
 /* Affichage mots en fonction de l'état du pourcentage d'accuracy */
 
@@ -248,3 +246,4 @@ footer {
 #stats {
     color: rgb(60,60,60);
 }
+

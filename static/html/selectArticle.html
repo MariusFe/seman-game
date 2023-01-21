@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <!-- TODO
-- Replace script
-- Script in another document ? see how this will work with the flask if statement
-- Overall shape of the page
 - When the stats will be implemented: place to show them
 - Sessions
 -->
@@ -11,33 +8,37 @@
     <meta charset="utf-8" name="viewport" content="inital-scale=1, width=device-width">
     <title>seman-game</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="./static/js/script.js"></script>
+    <script type="text/javascript" src="./static/js/scriptSelectArticle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="stylesheet" href="./static/css/styleSelectArticle.css">
 </head>
     <body>
-        <h1>Bienvenue dans la ligue des légendes</h1>
+        <h1>Bienvenue dans la faille de l'invocateur</h1>
         <div id="chargement"></div>
-        <div>
-            <input type="text" id="word" name="in_word" placeholder="Mot">
-                <button id="submit_word" name="submit_word" type="submit">
-                    Submit mot
-                </button>
-        </div>
 
         <div id="letsplay">
             <p id="titre"></p>
-            
             <p id="article"></p>
+            <p id="stats">
+                Taille article : <span id="length" style="font: bold;"></span>
+            </p>
         </div>
 
+        <div>
+            <button id="oui" name="oui" type="submit">
+                Oui
+            </button>
+            <button id="non" name="non" type="submit">
+                Non
+            </button>
+        </div>
         <div>
             <button id="new_article" name="new_article" type="submit">
                 Nouvel article
             </button>
         </div>
-
+        
         <footer>
             @2023 <a href="http://github.com/MariusFe/seman-game" target="_blank" rel="noopener noreferrer">GitHub Repository</a>, 
             <a href="http://github.com/MariusFe" target="_blank" rel="noopener noreferrer">MariusFe</a>, 
