@@ -99,10 +99,11 @@ class Back:
             else:
                 to_index[i]["mot"] = mot
                 to_index[i]["character"] = True
+                to_index[i]["etat"] = ["trouve"]
             
             i += 1
 
-        # Loop through the entire article, we keep i to its preivous value
+        # Loop through the entire article, we keep i to its previous value
         for mot in re.split('(\W)', page_py.text):
             self.text[i] = {
                 "mot": mot,
@@ -120,6 +121,7 @@ class Back:
             else:
                 to_index[i]["mot"] = mot
                 to_index[i]["character"] = True
+                to_index[i]["etat"] = ["trouve"]
             i += 1
 
         if self.returned_size > self.taille_article:

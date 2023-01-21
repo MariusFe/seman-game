@@ -1,3 +1,4 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 :: Create folder if it does not exist
 IF EXIST "./data" (
     echo 'Folder exists'
@@ -16,4 +17,4 @@ pip install wikipedia-api --user
 pip install gensim --user
 pip install flask --user
 :: Launch server
-python index.py
+python app.py
