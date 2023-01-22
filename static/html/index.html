@@ -11,13 +11,13 @@
     <script type="text/javascript" src="./static/js/scriptIndex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="./static/css/styleSelectArticle.css">
+    <link rel="stylesheet" href="./static/css/style.css">
 </head>
     <body>
         <h1>Bienvenue dans la faille de l'invocateur</h1>
         <div id="chargement"></div>
         <div>
-            <input type="text" id="word" name="in_word" placeholder="Mot">
+            <input type="text" id="word" name="in_word" placeholder="Mot" autofocus>
                 <button id="submit_word" name="submit_word" type="submit">
                     Soumettre mot
                 </button>
@@ -32,6 +32,26 @@
             <button id="new_article" name="new_article" type="submit">
                 Nouvel article
             </button>
+<!-- Il faut faire un input de type radio pour choisir soit un article de la liste (afficher la longueur ?) soit un article random
+Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
+
+            <div id="div_code_article_generer">
+                <button id="code_article_generer" name="code_article_generer" type="submit">
+                    Générer code article
+                </button>
+                <div id="code_article_current">
+                    <span id="code_article_texte">Test code</span>
+                    <button id="copier_code" name="copier_code" type="submit">
+                        Copier
+                    </button>
+                </div>
+            </div>
+            <div>
+                <input type="text" id="code_article" name="code_article" placeholder="Code de l'article">
+                <button id="code_article_entrer" name="code_article_entrer" type="submit">
+                    Entrer
+                </button>
+            </div>
             <form action="/selectArticle">
                 <button id="selection_article">
                     Sélectionner des articles

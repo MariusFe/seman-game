@@ -70,27 +70,39 @@ $(document).ready(function() {
             }
           });
     });
+
+    $("#copier_code").click(function(){
+        var code = document.getElementById("code_article_texte").innerHTML;
+        navigator.clipboard.writeText(code);
+    });
 });
 
 function updateArticle(data){
-    article.innerHTML = "";
+
     titre.innerHTML = "";
+    article.innerHTML = "";
         
     for(let i in data){
-        const mot = document.createElement("span");
-        //mot.id = i;
-
+        var mot = document.createElement("span");
+        
         data[i].classes.forEach(classe => {
             mot.classList.add(classe);
         });
 
-        mot.innerHTML = data[i].mot.trim(); //save the word
+        if(data[i].mot == " "){
+            mot.innerHTML = "&nbsp;";
+        } /*else if (data[i].mot == "\n"){ // What to do with line break? it doesn't seem to work properly with just a creation of a <br>
+            mot = document.createElement("br");
+        }*/ else if (data[i].mot != ""){
+            mot.innerHTML = data[i].mot; //save the word
+        } else {
+            continue;
+        }
     
         if(data[i].classes.includes("titre"))
             titre.appendChild(mot);
         else 
             article.appendChild(mot);
-
     }
 };
 

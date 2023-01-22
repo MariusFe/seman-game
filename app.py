@@ -45,6 +45,13 @@ def tricher():
 def selectArticle():
     return render_template('selectArticle.html')
 
+@app.route('/add_article', methods=['POST'])
+def addArticle():
+    titre = _back.titre
+    with open("./data/articleList.txt", 'a',encoding='utf8') as file:
+        file.writelines(titre + "\n")
+    return 'ok'
+
 
 # This function takes a dict returned from the back to transform it to a json read by the JavaScript in the .html doc
 # We could just directly return the correct format from the Back object I know but that means I need to redo a lot (flemme + ratio)

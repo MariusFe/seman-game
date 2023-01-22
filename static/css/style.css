@@ -59,9 +59,7 @@ input:focus{
     justify-content: center;
 }
 
-#article{
-    justify-content: space-between;
-}
+
 
 #titre > span{
     font-size: 2.5em; 
@@ -74,7 +72,6 @@ input:focus{
     border-radius: 5px;
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
 }
 #article::after {
     content: "";
@@ -104,14 +101,15 @@ input:focus{
 }
 p > span {
     display: inline-block;
-    padding: 5px;
     margin-top: 5px;
     border-radius: 5px;
+    gap: 1px;
 }
 
-.character{
-    margin: auto -7px;
+#article{
+    justify-content: normal;
 }
+
 
 /* Affichage mots en fonction de l'état du pourcentage d'accuracy */
 
@@ -247,4 +245,42 @@ footer {
 
 #stats {
     color: rgb(60,60,60);
+}
+
+#code_article_current{
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 20px 2vw;
+    color: #00abc2;
+    font-size: 1.5em;
+    transition: 1s;
+    transition: 0.5s;
+    margin: 20px auto;
+    width: auto;
+}
+
+#copier_code{
+    background-color: gray;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: rgb(49, 49, 49);
+    font-size: 0.5em;
+    transition: 0.2s;
+    width: fit-content;
+    margin: 20px auto;
+    border: transparent;
+}
+
+#copier_code:hover{
+    cursor: pointer;
+    color: black;
+}
+
+#code_article_current > span {
+    color: lightgray;
+}
+
+#code_article_current {
+    display: inline-block;
 }

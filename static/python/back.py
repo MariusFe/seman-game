@@ -130,6 +130,8 @@ class Back:
         for i in range(0, self.returned_size):
             self.toIndex[i] = to_index[i]
 
+        self.titre = DATA["query"]["random"][0]["title"]
+
         print(DATA["query"]["random"][0]["title"])
 
         return self.toIndex
