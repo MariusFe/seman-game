@@ -135,9 +135,7 @@ function newarticle() {
 
 function checkdone(){
     var nbfound_title = document.getElementById("titre").getElementsByClassName("trouve").length;
-    console.log("Length trouvé: " + nbfound_title);
     var length_title = document.getElementById("titre").getElementsByClassName("titre").length;
-    console.log("Length titre: " + length_title);
 
     if(nbfound_title==length_title && !continue1){
         Swal.fire({
