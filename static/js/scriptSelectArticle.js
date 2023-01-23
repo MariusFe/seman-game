@@ -9,19 +9,8 @@ $(document).ready(function() {
     //newarticle();
 
     $("#oui").click(function(){
-        // Getting the title of the article
-        // var titreString = "";
-        // if(titre.getElementsByTagName('*').length > 0){
-        //     for(let i = 0; i < titre.getElementsByTagName('*').length; i = i+1){
-        //         if(titre.getElementsByTagName("*")[i].innerHTML == "&nbsp;"){
-        //             titreString = titreString + " ";
-        //         } else {
-        //             titreString = titreString + titre.getElementsByTagName("*")[i].innerHTML;
-        //         }
-        //    }
-        //}
         // Add the title to a txt, json, xml file 
-        axios.post('/add_article')
+        axios.get('/add_article')
             .then(function(response){
                 // Success
             })
@@ -38,6 +27,27 @@ $(document).ready(function() {
 
     $("#new_article").click(function(){
         newarticle();
+    });
+
+    $("#submit_article").click(function(){
+        var article = document.getElementById("article_texte").value;
+        document.getElementById("faux_article").innerHTML = "";
+
+        // Add an article to the list
+        axios.post('/add_article',{
+            'article': article
+        }).then(function(response){
+            // Success 
+            if (response.data['vraiArticle'] == true){ // Vrai article
+                document.getElementById("article_texte").value = "";
+            } else { // Faux article
+                document.getElementById("faux_article").innerHTML = "Entrez un titre d'article valide !";
+            }
+        })
+        .catch(function(error){
+            console.log(error);
+        });
+
     });
 });
 

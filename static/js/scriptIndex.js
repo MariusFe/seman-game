@@ -110,7 +110,16 @@ function updateArticle(data){
 function newarticle() {
     $( "#chargement" ).fadeIn("slow");
     continue1 = false;
-    axios.get('/new_article')
+    if ($('input[name="article_type"]:checked').val() == "random"){
+        var random = true;
+    }
+    else {
+        var random = false;
+    }
+
+    axios.post('/new_article', {
+        'random': random
+    })
         .then(function (response) {
         // handle success
         $( "#chargement" ).fadeOut("slow");

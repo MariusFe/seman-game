@@ -41,7 +41,7 @@ class Back:
         self.max_similarity_states = max_similarity_states
         self.unknownchar = unknownchar
 
-    def getArticle(self):
+    def getRandomArticle(self):
         #Creating the session and preparing the url
 
         s= requests.Session()
@@ -74,6 +74,25 @@ class Back:
             if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
+        self.articleToApp(DATA["query"]["random"][0]["title"], page_py.text)
+
+        return self.toIndex
+
+    def getListArticle(self, titre):
+
+        wiki_wiki = wikipediaapi.Wikipedia(
+            language='fr',
+            extract_format=wikipediaapi.ExtractFormat.WIKI
+        )
+
+        page_py = wiki_wiki.page(titre)
+
+        self.articleToApp(titre, page_py.text)
+
+        return self.toIndex
+
+    def articleToApp(self, titre, article):
+
         # This dict is for the Back object only, it contains the text in clear and if it is part of the title or not
         self.text = {}
         # This dict is for the index, text blured or found, has way more information than the previous one
@@ -82,7 +101,7 @@ class Back:
         # Loop through the title
         # re.split('(\W)', string) splits between words and every other character
         i=0
-        for mot in re.split('(\W)',DATA["query"]["random"][0]["title"]):
+        for mot in re.split('(\W)',titre):
             self.text[i] = {
                 "mot": mot,
                 "titre": True
@@ -104,7 +123,7 @@ class Back:
             i += 1
 
         # Loop through the entire article, we keep i to its previous value
-        for mot in re.split('(\W)', page_py.text):
+        for mot in re.split('(\W)', article):
             self.text[i] = {
                 "mot": mot,
                 "titre": False
@@ -130,9 +149,9 @@ class Back:
         for i in range(0, self.returned_size):
             self.toIndex[i] = to_index[i]
 
-        self.titre = DATA["query"]["random"][0]["title"]
+        self.titre = titre
 
-        print(DATA["query"]["random"][0]["title"])
+        print(titre)
 
         return self.toIndex
 
@@ -213,3 +232,15 @@ class Back:
                 self.toIndex[i]["etat"] = ["trouve"]
                 self.toIndex[i]["mot"] = self.text[i]["mot"]
         return self.toIndex
+
+    def checkTitreArticle(self, titreArticleATester):
+        wiki_wiki = wikipediaapi.Wikipedia(
+            language='fr',
+            extract_format=wikipediaapi.ExtractFormat.WIKI
+        )
+
+        page_py = wiki_wiki.page(titreArticleATester)
+
+        # Retourne True si l'article est un vrai
+        # Retourne Faux si il est faux
+        return page_py.text != ""
