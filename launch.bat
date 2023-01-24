@@ -16,5 +16,7 @@ IF EXIST "./data/model.bin" (
 pip install wikipedia-api --user
 pip install gensim --user
 pip install flask --user
+pip install cryptography --user
+pip install python-dotenv --user
 :: Launch server
 python app.py

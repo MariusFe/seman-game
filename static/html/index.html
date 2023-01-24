@@ -32,6 +32,7 @@
             <button id="new_article" name="new_article" type="submit">
                 Nouvel article
             </button>
+            <br>
             <input type="radio" id="random" name="article_type" value="random" checked>
             <label for="random">Article aléatoire</label>
             <input type="radio" id="liste" name="article_type" value="liste">
@@ -44,7 +45,7 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
                     Générer code article
                 </button>
                 <div id="code_article_current">
-                    <span id="code_article_texte">Test code</span>
+                    <span id="code_article_texte"></span>
                     <button id="copier_code" name="copier_code" type="submit">
                         Copier
                     </button>
@@ -53,8 +54,10 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
             <div>
                 <input type="text" id="code_article" name="code_article" placeholder="Code de l'article">
                 <button id="code_article_entrer" name="code_article_entrer" type="submit">
-                    Entrer
+                    Entrer le code
                 </button>
+                <br>
+                <span id="faux_code" style="font-size: 1.5em; color: darkred;"></span>
             </div>
             <form action="/selectArticle">
                 <button id="selection_article">

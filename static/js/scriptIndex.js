@@ -75,13 +75,48 @@ $(document).ready(function() {
         var code = document.getElementById("code_article_texte").innerHTML;
         navigator.clipboard.writeText(code);
     });
+
+    $("#code_article_generer").click(function(){
+        axios.get('/code_article')
+        .then(function(response){
+            // Ajouter le code de l'article sur l'index
+
+            if(response.data != "Error"){
+                var code = response.data['titre_crypte'];
+                document.getElementById("code_article_texte").innerHTML = code;
+            }
+
+        }).catch(function(error){
+            console.log(error);
+        });
+    });
+
+    $("#code_article_entrer").click(function(){
+        var code = document.getElementById("code_article").value;
+        document.getElementById("faux_code").innerHTML = "";
+        axios.post('/code_article', {
+            'code': code
+        }).then(function(response){
+            if(response.data == "Error"){
+                // Entered code is not correct
+                document.getElementById("faux_code").innerHTML = "Code rentré incorrect";
+            } else {
+                document.getElementById("code_article").value = "";
+                updateArticle(response.data);
+            }
+        }).catch(function(error){
+            console.log(error);
+        });
+    });
 });
 
 function updateArticle(data){
 
     titre.innerHTML = "";
     article.innerHTML = "";
-        
+
+    document.getElementById("code_article_texte").innerHTML = "";
+
     for(let i in data){
         var mot = document.createElement("span");
         
@@ -116,7 +151,6 @@ function newarticle() {
     else {
         var random = false;
     }
-
     axios.post('/new_article', {
         'random': random
     })

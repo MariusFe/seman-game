@@ -74,11 +74,11 @@ class Back:
             if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
-        self.articleToApp(DATA["query"]["random"][0]["title"], page_py.text)
+        toIndex = self.articleToApp(DATA["query"]["random"][0]["title"], page_py.text)
 
-        return self.toIndex
+        return toIndex
 
-    def getListArticle(self, titre):
+    def getArticleFromTitre(self, titre):
 
         wiki_wiki = wikipediaapi.Wikipedia(
             language='fr',
@@ -87,9 +87,9 @@ class Back:
 
         page_py = wiki_wiki.page(titre)
 
-        self.articleToApp(titre, page_py.text)
+        toIndex = self.articleToApp(titre, page_py.text)
 
-        return self.toIndex
+        return toIndex
 
     def articleToApp(self, titre, article):
 
