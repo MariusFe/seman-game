@@ -14,13 +14,18 @@
     <link rel="stylesheet" href="./static/css/style.css">
 </head>
     <body>
-        <h1>Bienvenue dans la faille de l'invocateur</h1>
+        <h1>Bienvenue</h1>
         <div id="chargement"></div>
-        <div>
+        <div id="submit_div">
+            <div>
             <input type="text" id="word" name="in_word" placeholder="Mot" autofocus>
                 <button id="submit_word" name="submit_word" type="submit">
-                    Soumettre mot
+                    Envoyer
                 </button>
+            </div>
+            <button id='tricher_after_win' name='tricher_after_win' type='submit' style="display: none;">
+                Afficher la page en clair
+            </button>
         </div>
 
         <div id="letsplay">
@@ -45,7 +50,7 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
                     Générer code article
                 </button>
                 <div id="code_article_current">
-                    <span id="code_article_texte"></span>
+                    <span id="code_article_texte" style="font-size: 0.2em;"></span>
                     <button id="copier_code" name="copier_code" type="submit">
                         Copier
                     </button>
@@ -65,9 +70,13 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
                 </button>
             </form>
         </div>
+        <button id="tricher" name="tricher" type="submit">
+            Tricher
+        </button>
         
         <footer>
-            @2023 <a href="http://github.com/MariusFe/seman-game" target="_blank" rel="noopener noreferrer">GitHub Repository</a>, 
+            @2023 5A SAGI Polytech Angers project, 
+            <a href="http://github.com/MariusFe/seman-game" target="_blank" rel="noopener noreferrer">GitHub Repository</a>, 
             <a href="http://github.com/MariusFe" target="_blank" rel="noopener noreferrer">MariusFe</a>, 
             <a href="https://github.com/LeVraiRoiDHyrule" target="_blank" rel="noopener noreferrer">LeVraiRoiDHyrule</a>, 
             <a href="https://github.com/MatthieuNEDELEC" target="_blank" rel="noopener noreferrer">MatthieuNEDELEC</a>, 

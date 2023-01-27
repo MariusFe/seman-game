@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import static.python.back as back
 import json
 import random
@@ -71,14 +71,18 @@ def addArticle():
         # return False: le texte entré n'est pas un vrai article
         titreATester = request.get_json()['article']
         vraiArticle = _back.checkTitreArticle(titreATester)
+        inList = checkIfInList(titreATester)
 
         # On ajoute le titre au fichier texte si il est bon
 
-        if vraiArticle == True and checkIfInList(titreATester) == False:
+        if vraiArticle == True and  inList == False:
             with open("./data/articleList.txt", 'a',encoding='utf8') as file:
                 file.writelines(titreATester + "\n")
 
-        return {"vraiArticle": vraiArticle}
+        return {
+            "vraiArticle": vraiArticle,
+            "inList": inList
+        }
 
     # Si méthode GET on ajoute le titre de l'article actuel, on est sûr qu'il est bon
     else:
@@ -116,6 +120,17 @@ def genererCodeArticle():
         except:
             return "Error"
 
+@app.route('/article', methods=['POST'])
+def articleURL():
+
+    code = request.args.get('code')
+
+    return render_template('index.html')
+
+
+
+
+
 
 # This function takes a dict returned from the back to transform it to a json read by the JavaScript in the .html doc
 # We could just directly return the correct format from the Back object I know but that means I need to redo a lot (flemme + ratio)
@@ -136,11 +151,13 @@ def fromBacktoIndex(texte):
 
 # Check if the input title is in the list of all the articles, do not put twice the same article
 def checkIfInList(titre):
-    with open('./data/articleList.txt', 'r', encoding='utf8') as file:
-        if titre in file.readlines():
+
+    file = open('./data/articleList.txt', 'r', encoding='utf8')
+    for titreListe in file.readlines():
+        if titre.lower() == titreListe[:-1].lower():
             return True
-        else:
-            return False
+
+    return False
 
 
 app.run(port=8080, debug=True)

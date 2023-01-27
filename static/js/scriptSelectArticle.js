@@ -32,14 +32,24 @@ $(document).ready(function() {
     $("#submit_article").click(function(){
         var article = document.getElementById("article_texte").value;
         document.getElementById("faux_article").innerHTML = "";
+        document.getElementById("vrai_article").innerHTML = "";
+        document.getElementById("article_in_list").innerHTML = "";
 
         // Add an article to the list
         axios.post('/add_article',{
             'article': article
         }).then(function(response){
             // Success 
-            if (response.data['vraiArticle'] == true){ // Vrai article
+            if (response.data['vraiArticle'] == true && response.data['inList'] == false){ // Vrai article pas dans la liste
+
                 document.getElementById("article_texte").value = "";
+                document.getElementById("vrai_article").innerHTML = "Article ajouté !";
+
+            } else if(response.data['vraiArticle'] == true && response.data['inList'] == true) { // Vrai article mais pas dans la liste
+                
+                document.getElementById("article_texte").value = "";
+                document.getElementById("article_in_list").innerHTML = "L'article est déjà dans la liste.";
+
             } else { // Faux article
                 document.getElementById("faux_article").innerHTML = "Entrez un titre d'article valide !";
             }
@@ -49,6 +59,14 @@ $(document).ready(function() {
         });
 
     });
+
+    document.getElementById("article_texte").addEventListener("keypress", function(event) { // Handle the press of Enter (because it is not in a form)
+        if (event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("submit_article").click();
+        }
+      }); 
+
 });
 
 // Faire la requete vers le serveur

@@ -108,6 +108,15 @@ $(document).ready(function() {
             console.log(error);
         });
     });
+
+    // Because the element has been created after the page was load we have to use this thingy
+    $("#tricher_after_win").click(function(){
+        tricher();
+    });
+
+    $("#tricher").click(function(){
+        tricher();
+    });
 });
 
 function updateArticle(data){
@@ -145,6 +154,9 @@ function updateArticle(data){
 function newarticle() {
     $( "#chargement" ).fadeIn("slow");
     continue1 = false;
+
+    document.getElementById("tricher_after_win").style.display = "none";
+
     if ($('input[name="article_type"]:checked').val() == "random"){
         var random = true;
     }
@@ -183,7 +195,18 @@ function checkdone(){
             } else if (result.isDenied) {
                 Swal.fire('Okay let\'s continue then !', '', 'info');
                 if(!continue1) continue1 = true;
+
+                document.getElementById("tricher_after_win").style.display = "unset";
             }
         });
     }
+}
+
+function tricher() {
+    axios.get('/tricher')
+    .then(function(response){
+        updateArticle(response.data);
+    }).catch(function(error){
+        console.log(error);
+    });
 }

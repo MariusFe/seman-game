@@ -284,3 +284,13 @@ footer {
 #code_article_current {
     display: inline-block;
 }
+
+#tricher_after_win{
+    width: min(430px, 90vw);
+}
+
+#tricher{
+    border-color: transparent;
+    color: transparent;
+    cursor: default;
+}
