@@ -5,6 +5,8 @@ import random
 import os
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
+from gensim.models import KeyedVectors
+from flask_session import Session
 
 """
 Index Flask
@@ -15,15 +17,24 @@ TO DO
 - Overall statistics, working with a database ? or simply or global json
 - More ?
 """
-
-app = Flask(__name__,template_folder= "./static/html")
-_back = back.Back(returned_size=300)
-
+# Load .env and keys
 load_dotenv()
 KEY = os.getenv('KEY')
+APP_KEY = os.getenv('APP_KEY')
 
+# Create the app, session and the model
+app = Flask(__name__,template_folder= "./static/html")
+app.secret_key = APP_KEY
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
+
+
+# Create a new article
 @app.route('/new_article', methods=['POST'])
 def new_article():
+    _back = back.Back()
+    _back.__dict__.update(session['back'])
 
     # Si l'utilisateur a sélectionné un article aléatoire parmi tout wikipedia
     if request.get_json()['random'] == True:
@@ -37,34 +48,52 @@ def new_article():
             titreRandom = random.choice(data)
             texte = _back.getArticleFromTitre(titreRandom[:-1])
             send = fromBacktoIndex(texte)
-  
+    session.clear()
+    session['back'] = _back.__dict__
     return json.dumps(send)
 
-
+# Submit a word
 @app.route('/submit', methods=['POST'])
 def submit():
+    _back = back.Back()
+    _back.__dict__.update(session['back'])
     print(request.get_json()['in_word'])
-    texte = _back.testMot(request.get_json()['in_word'])
+    texte = _back.testMot(request.get_json()['in_word'], model)
     send = fromBacktoIndex(texte)
     
+    session['back'] = _back.__dict__
     return json.dumps(send)
 
+# Root
 @app.route('/')
 def home():
+    session['back'] = back.Back().__dict__
     return render_template('index.html')
 
+# If the user wants to cheat
 @app.route('/tricher')
 def tricher():
+    
+    _back = back.Back()
+    _back.__dict__.update(session['back'])
+    
     texte = _back.tricher()
     send  = fromBacktoIndex(texte)
+
+    session['back'] = _back.__dict__
     return json.dumps(send)
 
+# When the user wants to add article to the list
 @app.route('/selectArticle')
 def selectArticle():
     return render_template('selectArticle.html')
-
+ 
+# Article being added to the list
 @app.route('/add_article', methods=['POST', 'GET'])
 def addArticle():
+    _back = back.Back()
+    _back.__dict__.update(session['back'])
+
     if request.method == 'POST':
         # Tester si le mot est vrai ou pas
         # return True: le texte entré est un vrai article
@@ -79,6 +108,7 @@ def addArticle():
             with open("./data/articleList.txt", 'a',encoding='utf8') as file:
                 file.writelines(titreATester + "\n")
 
+        session['back'] = _back.__dict__
         return {
             "vraiArticle": vraiArticle,
             "inList": inList
@@ -90,16 +120,22 @@ def addArticle():
         if not checkIfInList(titre):
             with open("./data/articleList.txt", 'a',encoding='utf8') as file:
                 file.writelines(titre + "\n")
+
+        session['back'] = _back.__dict__
         return 'ok'
 
+# Routes to get or post the code of an article
 @app.route('/code_article', methods=['POST', 'GET'])
 def genererCodeArticle():
+    _back = back.Back()
+    _back.__dict__.update(session['back'])
 
     # Si méthode GET on renvoie le code crypté à l'utilisateur
     if request.method == 'GET':
         try:
             titreCrypte = Fernet(KEY).encrypt(_back.titre.encode()).decode()
             send = {'titre_crypte': titreCrypte}
+            session['back'] = _back.__dict__
             return json.dumps(send)
         except:
             return "Error"
@@ -116,10 +152,13 @@ def genererCodeArticle():
             else:
                 texte = _back.getArticleFromTitre(titre)
                 send = fromBacktoIndex(texte)
+                session['back'] = _back.__dict__
                 return json.dumps(send)
         except:
             return "Error"
 
+# Route to get an article with a code in the url
+# WIP
 @app.route('/article', methods=['POST'])
 def articleURL():
 
@@ -127,13 +166,21 @@ def articleURL():
 
     return render_template('index.html')
 
-
-
-
-
-
 # This function takes a dict returned from the back to transform it to a json read by the JavaScript in the .html doc
 # We could just directly return the correct format from the Back object I know but that means I need to redo a lot (flemme + ratio)
+# The format is 
+# {
+#     "0": {
+#         "id" : 0,
+#         "mot": mot,
+#         "classes": ["article","trouve"], # or "top", "mitop", "pastop", "cache", "titre", "character", "new_trouve"
+#         "percentage": 1, # between 0 and 1
+#         "character": False
+#     },
+#     "1" :{
+#     ...
+#     }
+# }
 
 def fromBacktoIndex(texte):
     send = {}
@@ -159,5 +206,16 @@ def checkIfInList(titre):
 
     return False
 
+
+# Deletion of the session files before starting the server
+# So the server is not building up data over time even after a restart
+# May be useful if we want to track user stats, we will see for later
+try:
+    folder = './flask_session/'
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        os.remove(file_path)
+except:
+    pass
 
 app.run(port=8080, debug=True)

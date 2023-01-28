@@ -1,7 +1,6 @@
 import wikipediaapi
 import requests
 import re
-from gensim.models import KeyedVectors
 import math
 
 """
@@ -17,29 +16,36 @@ Takes:
 - taille_article, number of words per article we want. We skip the small articles
 - nb_paragraphes, number of paragraphes we take in the article chosen. We avoid to display too much text
 - trigger_similarity, if two words are less than (default, to be adjusted) 20% similar we don't show it to the user
-- returned_size, size of the returned json. The number of words that will be displayed on the page (default 100)
 - (not implemented) trigger_exact, if the similarity two words are over this value that means it deserves to be shown as the exact same word ("être" == "est")
+- max_similarity_states
+- nb_states, the number of possible state for a close word. Can be either, "top", "mitop" or "pastop"
+- returned_size, size of the returned json. The number of words that will be displayed on the page (default 500)
+- unknown_char, the character used to hide letters in the word, default: "•"
 
 TO DO:
-- Split words with characters, example "oui," -> ["oui",","]
-- Work on the trigger
-- Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
+- [X] Split words with characters, example "oui," -> ["oui",","]
+- [ ] Work on the trigger
+- [ ] Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
 """
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 100, trigger_exact = 0.58, unknownchar="•"):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 500, trigger_exact = 0.58, unknownchar="•"):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
         self.nb_paragraphes = nb_paragraphes
-        self.model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
         self.trigger_similarity = trigger_similarity
         self.returned_size = returned_size
         self.trigger_exact = trigger_exact
         self.nb_states = nb_states
         self.max_similarity_states = max_similarity_states
         self.unknownchar = unknownchar
+        self.titre = ""
+
+    def __str__(self):
+        string = f"Titre: {self.titre}; taille: {self.taille_article}"
+        return string
 
     def getRandomArticle(self):
         #Creating the session and preparing the url
@@ -143,6 +149,7 @@ class Back:
                 to_index[i]["etat"] = ["trouve"]
             i += 1
 
+        # Making sure we will not try to reach a value that does not exist
         if self.returned_size > self.taille_article:
             self.returned_size = self.taille_article
 
@@ -155,7 +162,7 @@ class Back:
 
         return self.toIndex
 
-    def testMot(self, motToTest):
+    def testMot(self, motToTest, model):
 
         # We test if the word entered is a real one (COMMENTED because it was not working with proper nouns, it is checked further anyway)
         # try: 
@@ -183,7 +190,7 @@ class Back:
             elif "trouve" not in self.toIndex[i]["etat"]:
                 # We try once again to be sure, redundancy, the last thing we want is the server to crash
                 try:
-                    similarity = self.model.similarity(str(self.text[i]["mot"]).lower(), str(motToTest).lower())
+                    similarity = model.similarity(str(self.text[i]["mot"]).lower(), str(motToTest).lower())
                 except:
                     similarity = 0
                 # trigger_smiliraty can be changed based on empirical researchs
