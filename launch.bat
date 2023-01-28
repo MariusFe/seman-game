@@ -18,7 +18,7 @@ pip install gensim --user
 pip install flask --user
 pip install cryptography --user
 pip install python-dotenv --user
-:: pip install Flask-Session --user
+pip install Flask-Session --user
 pip install boto3 --user
 
 :: Generate APP_KEY and KEY for crypting the session cookies and the title of the articles
