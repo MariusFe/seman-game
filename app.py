@@ -218,4 +218,4 @@ try:
 except:
     pass
 
-app.run(port=8080, debug=True)
+app.run(port=8087, host='0.0.0.0', debug=True)
