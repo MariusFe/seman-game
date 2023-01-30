@@ -1,5 +1,7 @@
 /*
     Script for script.js
+    TO DO
+    - [ ] Deal with escape character
 */
 
 // Variables globales
@@ -99,7 +101,7 @@ $(document).ready(function() {
         }).then(function(response){
             if(response.data == "Error"){
                 // Entered code is not correct
-                document.getElementById("faux_code").innerHTML = "Code rentré incorrect";
+                document.getElementById("faux_code").innerHTML = "Code entré incorrect";
             } else {
                 document.getElementById("code_article").value = "";
                 updateArticle(response.data);

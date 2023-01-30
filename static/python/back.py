@@ -26,6 +26,7 @@ TO DO:
 - [X] Split words with characters, example "oui," -> ["oui",","]
 - [ ] Work on the trigger
 - [ ] Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
+- [ ] Keep only a certain amount of paragraphs
 """
 
 class Back:

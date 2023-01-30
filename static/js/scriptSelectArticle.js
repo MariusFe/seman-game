@@ -73,7 +73,9 @@ $(document).ready(function() {
 function newarticle(){
     $("#chargement").fadeIn("slow");
 
-    axios.get('/new_article')
+    axios.post('/new_article', {
+        'random': true,
+    })
         .then(function (response) {
         // handle success
         axios.get('/tricher')
