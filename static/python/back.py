@@ -1,7 +1,6 @@
 import wikipediaapi
 import requests
 import re
-from gensim.models import KeyedVectors
 import math
 
 """
@@ -17,28 +16,39 @@ Takes:
 - taille_article, number of words per article we want. We skip the small articles
 - nb_paragraphes, number of paragraphes we take in the article chosen. We avoid to display too much text
 - trigger_similarity, if two words are less than (default, to be adjusted) 20% similar we don't show it to the user
-- returned_size, size of the returned json. The number of words that will be displayed on the page (default 100)
 - (not implemented) trigger_exact, if the similarity two words are over this value that means it deserves to be shown as the exact same word ("être" == "est")
+- max_similarity_states
+- nb_states, the number of possible state for a close word. Can be either, "top", "mitop" or "pastop"
+- returned_size, size of the returned json. The number of words that will be displayed on the page (default 500)
+- unknown_char, the character used to hide letters in the word, default: "•"
 
 TO DO:
-- Split words with characters, example "oui," -> ["oui",","]
-- Work on the trigger
-- Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
+- [X] Split words with characters, example "oui," -> ["oui",","]
+- [ ] Work on the trigger
+- [ ] Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
+- [ ] Keep only a certain amount of paragraphs
 """
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, returned_size = 100, trigger_exact = 0.58):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 500, trigger_exact = 0.58, unknownchar="•"):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
         self.nb_paragraphes = nb_paragraphes
-        self.model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unicode_errors="ignore")
         self.trigger_similarity = trigger_similarity
         self.returned_size = returned_size
         self.trigger_exact = trigger_exact
+        self.nb_states = nb_states
+        self.max_similarity_states = max_similarity_states
+        self.unknownchar = unknownchar
+        self.titre = ""
 
-    def getArticle(self):
+    def __str__(self):
+        string = f"Titre: {self.titre}; taille: {self.taille_article}"
+        return string
+
+    def getRandomArticle(self):
         #Creating the session and preparing the url
 
         s= requests.Session()
@@ -71,6 +81,25 @@ class Back:
             if len(page_py.text.split(" ")) < self.taille_article:
                 DATA["query"]["random"][0]["title"] = DATA["query"]["random"][0]["title"] + ":"
 
+        toIndex = self.articleToApp(DATA["query"]["random"][0]["title"], page_py.text)
+
+        return toIndex
+
+    def getArticleFromTitre(self, titre):
+
+        wiki_wiki = wikipediaapi.Wikipedia(
+            language='fr',
+            extract_format=wikipediaapi.ExtractFormat.WIKI
+        )
+
+        page_py = wiki_wiki.page(titre)
+
+        toIndex = self.articleToApp(titre, page_py.text)
+
+        return toIndex
+
+    def articleToApp(self, titre, article):
+
         # This dict is for the Back object only, it contains the text in clear and if it is part of the title or not
         self.text = {}
         # This dict is for the index, text blured or found, has way more information than the previous one
@@ -79,13 +108,13 @@ class Back:
         # Loop through the title
         # re.split('(\W)', string) splits between words and every other character
         i=0
-        for mot in re.split('(\W)',DATA["query"]["random"][0]["title"]):
+        for mot in re.split('(\W)',titre):
             self.text[i] = {
                 "mot": mot,
                 "titre": True
             }
             to_index[i] = {
-                "mot": "#" * len(mot),
+                "mot": self.unknownchar * len(mot),
                 "type": "titre",
                 # etat can be 'cache', 'trouve', 'proche', 'new_trouve'
                 "etat": ["cache"],
@@ -96,17 +125,18 @@ class Back:
             else:
                 to_index[i]["mot"] = mot
                 to_index[i]["character"] = True
+                to_index[i]["etat"] = ["trouve"]
             
             i += 1
 
-        # Loop through the entire article, we keep i to its preivous value
-        for mot in re.split('(\W)', page_py.text):
+        # Loop through the entire article, we keep i to its previous value
+        for mot in re.split('(\W)', article):
             self.text[i] = {
                 "mot": mot,
                 "titre": False
             }
             to_index[i] = {
-                "mot": "#" * len(mot),
+                "mot": self.unknownchar * len(mot),
                 "type": "article",
                 "etat": ["cache"],
                 "percentage": 0
@@ -117,19 +147,23 @@ class Back:
             else:
                 to_index[i]["mot"] = mot
                 to_index[i]["character"] = True
+                to_index[i]["etat"] = ["trouve"]
             i += 1
 
+        # Making sure we will not try to reach a value that does not exist
         if self.returned_size > self.taille_article:
             self.returned_size = self.taille_article
 
         for i in range(0, self.returned_size):
             self.toIndex[i] = to_index[i]
 
-        print(DATA["query"]["random"][0]["title"])
+        self.titre = titre
+
+        print(titre)
 
         return self.toIndex
 
-    def testMot(self, motToTest):
+    def testMot(self, motToTest, model):
 
         # We test if the word entered is a real one (COMMENTED because it was not working with proper nouns, it is checked further anyway)
         # try: 
@@ -157,7 +191,7 @@ class Back:
             elif "trouve" not in self.toIndex[i]["etat"]:
                 # We try once again to be sure, redundancy, the last thing we want is the server to crash
                 try:
-                    similarity = self.model.similarity(str(self.text[i]["mot"]).lower(), str(motToTest).lower())
+                    similarity = model.similarity(str(self.text[i]["mot"]).lower(), str(motToTest).lower())
                 except:
                     similarity = 0
                 # trigger_smiliraty can be changed based on empirical researchs
@@ -166,7 +200,23 @@ class Back:
                 if similarity > self.trigger_similarity and similarity > self.toIndex[i]["percentage"]:
                     print(f'Mot entré: {motToTest}, Mot du texte: {self.text[i]["mot"]}, similarité: {similarity}')
                     self.toIndex[i]["percentage"] = float(similarity)
-                    self.toIndex[i]["etat"] = ["proche"]
+                    step = (self.max_similarity_states-self.trigger_similarity) / self.nb_states
+                    
+                    if(similarity <= self.trigger_similarity+step):
+                        self.toIndex[i]["etat"] = ["pastop"]
+
+                    elif(similarity <= self.trigger_similarity+step*2):
+                        self.toIndex[i]["etat"] = ["mitop"]
+
+                    elif(similarity <= self.trigger_similarity+step*3):
+                        self.toIndex[i]["etat"] = ["top"]
+
+                    else:
+                        self.toIndex[i]["etat"] = ["top"]
+
+                    self.toIndex[i]["etat"].append("proche")
+
+
 
                     # This condition is to check if the tested word is bigger than the actual word or not
                     # Example: 'être' is the actual word
@@ -175,9 +225,30 @@ class Back:
                     if len(self.text[i]["mot"]) <= len(motToTest):
                         self.toIndex[i]["mot"] = motToTest
                     elif len(self.text[i]["mot"]) > len(motToTest):
-                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * "#" + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * "#"
+                        self.toIndex[i]["mot"] = math.floor((len(self.text[i]["mot"]) - len(motToTest))/2) * self.unknownchar + motToTest + math.ceil((len(self.text[i]["mot"]) - len(motToTest))/2) * self.unknownchar
             else:
                 # It shouldn't enter this, if anything we just return the self.toIndex at the end
                 pass
 
         return self.toIndex
+
+    def tricher(self):
+        for i in range(0, len(self.toIndex)):
+            if(self.toIndex[i]["character"]) == True:
+                pass
+            else:
+                self.toIndex[i]["etat"] = ["trouve"]
+                self.toIndex[i]["mot"] = self.text[i]["mot"]
+        return self.toIndex
+
+    def checkTitreArticle(self, titreArticleATester):
+        wiki_wiki = wikipediaapi.Wikipedia(
+            language='fr',
+            extract_format=wikipediaapi.ExtractFormat.WIKI
+        )
+
+        page_py = wiki_wiki.page(titreArticleATester)
+
+        # Retourne True si l'article est un vrai
+        # Retourne Faux si il est faux
+        return page_py.text != ""

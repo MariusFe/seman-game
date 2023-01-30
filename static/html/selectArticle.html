@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- TODO
+- When the stats will be implemented: place to show them
+- Sessions
+-->
+<head>
+    <meta charset="utf-8" name="viewport" content="inital-scale=1, width=device-width">
+    <title>seman-game</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./static/js/scriptSelectArticle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+    <body>
+        <h1>Bienvenue</h1>
+        <div id="chargement"></div>
+
+        <div id="letsplay">
+            <p id="titre"></p>
+            <p id="article"></p>
+            <p id="stats"><!-- Taille article --><span id="length" style="font: bold;"></span></p>
+        </div>
+
+        <div>
+            <button id="oui" name="oui" type="submit">
+                Oui
+            </button>
+            <button id="non" name="non" type="submit">
+                Non
+            </button>
+        </div>
+        <div>
+            <button id="new_article" name="new_article" type="submit">
+                Nouvel article
+            </button>
+        </div>
+        <div>
+            Ajouter manuellement un article à la liste:
+            <input type="text" id="article_texte" name="article_texte" placeholder="Nom de l'article" autofocus>
+                <button id="submit_article" name="submit_article" type="submit">
+                    Soumettre article
+                </button>
+                <span id="faux_article" style="font-size: 1.5em; color: darkred;"></span>
+                <span id="vrai_article" style="font-size: 1.5em; color: darkgreen;"></span>
+                <span id="article_in_list" style="font-size: 1.5em; color: lightgrey;"></span>
+        </div>
+        
+        <footer>
+            @2023 5A SAGI Polytech Angers project, 
+            <a href="http://github.com/MariusFe/seman-game" target="_blank" rel="noopener noreferrer">GitHub Repository</a>, 
+            <a href="http://github.com/MariusFe" target="_blank" rel="noopener noreferrer">MariusFe</a>, 
+            <a href="https://github.com/LeVraiRoiDHyrule" target="_blank" rel="noopener noreferrer">LeVraiRoiDHyrule</a>, 
+            <a href="https://github.com/Gdupontdoare" target="_blank" rel="noopener noreferrer">Gdupontdoare</a>
+            <a href="https://github.com/MatthieuNEDELEC" target="_blank" rel="noopener noreferrer">MatthieuNEDELEC</a>, 
+            Data by Jean-Philippe Fauconnier: <a href="https://fauconnier.github.io/ " target="_blank" rel="noopener noreferrer">fauconnier.github.io</a>
+        </footer>
+    </body>
+</html>

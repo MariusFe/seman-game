@@ -1,0 +1,296 @@
+/* TO DO
+EVERY GODDAM THING */
+
+
+/*  Classes for the article 
+    Orders are important!
+    Keep new_trouve before trouve
+    Character goes in priority too
+*/
+
+body{
+    background-color: #1d1d1d;
+    color: lightgrey;
+    text-align: center;
+    font-size: 1.5em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1{
+    font-size: 2em;
+}
+
+button{
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 10px 20px;
+    color: lightgrey;
+    font-size: 1.5em;
+    transition: 1s;
+    width: min(350px, 90vw);
+    margin: 20px auto;
+}
+
+button:hover{
+    cursor: pointer;
+    color: #00abc2;
+    font-size: 1.5em;
+}
+
+input{
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 20px 2vw;
+    color: #00abc2;
+    font-size: 1.5em;
+    transition: 1s;
+    transition: 0.5s;
+    margin: 20px auto;
+    width: min(500px, 80vw);
+}
+
+input:focus{
+    border-color: white;
+}
+
+#titre{
+    justify-content: center;
+}
+
+
+
+#titre > span{
+    font-size: 2.5em; 
+    font-weight: bold;
+    border-radius: 10px;
+}
+    
+#article, #titre {
+    font-size: 1em;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+#article::after {
+    content: "";
+    flex: auto;
+}
+.character {
+    color: rgb(100,100,100);
+    user-select: none;
+}
+.cache:not(.character) {
+    background-color: rgb(60,60,60);
+}
+.new_trouve {
+    animation: trouvein;
+    animation-duration: 15s;
+}
+.trouve {
+    color: rgb(60,60,60);
+}
+.proche {
+    background-color: rgb(60,60,60);
+}
+
+/* The rest */
+#receive {
+    display: none;
+}
+p > span {
+    display: inline-block;
+    margin-top: 5px;
+    border-radius: 5px;
+    gap: 1px;
+}
+
+#article{
+    justify-content: normal;
+}
+
+
+/* Affichage mots en fonction de l'état du pourcentage d'accuracy */
+
+.pastop{
+    color: red;
+}
+
+.mitop{
+    color: orange;
+}
+
+.top{
+    color: yellow;
+}
+
+
+#letsplay{
+    margin-top: 20px;
+    background-color: lightgrey;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+
+@keyframes trouvein {
+    from {
+        background-color: green;
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
+
+#chargement{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    background-color: #000000cc;
+    top: 0;
+    left: 0;
+}
+
+#chargement::before, #chargement::after{
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+
+#chargement::after {
+    content: "•";
+    width: 10vw;
+    height: 10vw;
+    margin-top: -5vw;
+    margin-left: -5vw;
+    border-top: 1vw dotted #3498db;
+    border-right: 0 solid #3498db;
+    border-left: 0 solid #3498db;
+    border-bottom: 1vw dotted #3498db;
+    animation: spin 5s linear infinite, groweye 3s linear infinite;
+    line-height: 8vw;
+    color: white;
+    font-size: 10vw;
+}
+
+#chargement::before {
+    width: 20vw;
+    height: 20vw;
+    margin-top: -11vw;
+    margin-left: -15vw;
+    border-top: 2vw solid #f3f3f3;
+    border-right: 5vw solid #f3f3f3;
+    border-left: 5vw solid #f3f3f3;
+    border-bottom: 2vw solid #f3f3f3;
+    animation: spin 1000s linear infinite reverse;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% {opacity: 0.5;}
+    100% { transform: rotate(360deg); opacity: 1; }
+  }
+
+@keyframes groweye {
+    0% { font-size: 10vw; }
+    50% {font-size: 12vw;}
+    100% { font-size: 10vw; }
+  }
+
+  a {
+    outline: none;
+    text-decoration: none;
+    padding: 2px 1px 0;
+  }
+  
+  a:link {
+    color: #3498db;
+  }
+  
+  a:visited {
+    color: #2977ac;
+  }
+  
+  a:active {
+    background: #6f8ea3;
+  }
+
+footer {
+    margin-top: 20px;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#non {
+    color: darkred;
+}
+
+#oui {
+    color: darkgreen;
+}
+
+#non:hover{
+    color: rgb(145, 92, 92);
+}
+
+#oui:hover{
+    color: rgb(92, 145, 92);
+}
+
+#stats {
+    color: rgb(60,60,60);
+}
+
+#code_article_current{
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 20px 2vw;
+    color: #00abc2;
+    font-size: 1.5em;
+    transition: 1s;
+    transition: 0.5s;
+    margin: 20px auto;
+    width: auto;
+}
+
+#copier_code{
+    background-color: gray;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: rgb(49, 49, 49);
+    font-size: 0.5em;
+    transition: 0.2s;
+    width: fit-content;
+    margin: 20px auto;
+    border: transparent;
+}
+
+#copier_code:hover{
+    cursor: pointer;
+    color: black;
+}
+
+#code_article_current > span {
+    color: lightgray;
+}
+
+#code_article_current {
+    display: inline-block;
+}
+
+#tricher_after_win{
+    width: min(430px, 90vw);
+}
+
+#tricher{
+    border-color: transparent;
+    color: transparent;
+    cursor: default;
+}

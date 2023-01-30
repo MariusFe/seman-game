@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- TODO
+- When the stats will be implemented: place to show them
+- Sessions
+-->
+<head>
+    <meta charset="utf-8" name="viewport" content="inital-scale=1, width=device-width">
+    <title>seman-game</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./static/js/scriptIndex.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+    <body>
+        <h1>Bienvenue</h1>
+        <div id="chargement"></div>
+        <div id="submit_div">
+            <div>
+            <input type="text" id="word" name="in_word" placeholder="Mot" autofocus>
+                <button id="submit_word" name="submit_word" type="submit">
+                    Envoyer
+                </button>
+            </div>
+            <button id='tricher_after_win' name='tricher_after_win' type='submit' style="display: none;">
+                Afficher la page en clair
+            </button>
+        </div>
+
+        <div id="letsplay">
+            <p id="titre"></p>
+            
+            <p id="article"></p>
+        </div>
+        <div>
+            <button id="new_article" name="new_article" type="submit">
+                Nouvel article
+            </button>
+            <br>
+            <input type="radio" id="random" name="article_type" value="random" checked>
+            <label for="random">Article aléatoire</label>
+            <input type="radio" id="liste" name="article_type" value="liste">
+            <label for="liste">Article parmi la liste</label>
+<!-- Il faut faire un input de type radio pour choisir soit un article de la liste (afficher la longueur ?) soit un article random
+Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
+
+            <div id="div_code_article_generer">
+                <button id="code_article_generer" name="code_article_generer" type="submit">
+                    Générer code article
+                </button>
+                <div id="code_article_current">
+                    <span id="code_article_texte" style="font-size: 0.2em;"></span>
+                    <button id="copier_code" name="copier_code" type="submit">
+                        Copier
+                    </button>
+                </div>
+            </div>
+            <div>
+                <input type="text" id="code_article" name="code_article" placeholder="Code de l'article">
+                <button id="code_article_entrer" name="code_article_entrer" type="submit">
+                    Entrer le code
+                </button>
+                <br>
+                <span id="faux_code" style="font-size: 1.5em; color: darkred;"></span>
+            </div>
+            <form action="/selectArticle">
+                <button id="selection_article">
+                    Sélectionner des articles
+                </button>
+            </form>
+        </div>
+        <button id="tricher" name="tricher" type="submit">
+            Tricher
+        </button>
+        
+        <footer>
+            @2023 5A SAGI Polytech Angers project, 
+            <a href="http://github.com/MariusFe/seman-game" target="_blank" rel="noopener noreferrer">GitHub Repository</a>, 
+            <a href="http://github.com/MariusFe" target="_blank" rel="noopener noreferrer">MariusFe</a>, 
+            <a href="https://github.com/LeVraiRoiDHyrule" target="_blank" rel="noopener noreferrer">LeVraiRoiDHyrule</a>, 
+            <a href="https://github.com/Gdupontdoare" target="_blank" rel="noopener noreferrer">Gdupontdoare</a>
+            <a href="https://github.com/MatthieuNEDELEC" target="_blank" rel="noopener noreferrer">MatthieuNEDELEC</a>, 
+            Data by Jean-Philippe Fauconnier: <a href="https://fauconnier.github.io/ " target="_blank" rel="noopener noreferrer">fauconnier.github.io</a>
+        </footer>
+    </body>
+</html>

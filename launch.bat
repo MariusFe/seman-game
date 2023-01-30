@@ -1,3 +1,4 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 :: Create folder if it does not exist
 IF EXIST "./data" (
     echo 'Folder exists'
@@ -15,5 +16,17 @@ IF EXIST "./data/model.bin" (
 pip install wikipedia-api --user
 pip install gensim --user
 pip install flask --user
+pip install cryptography --user
+pip install python-dotenv --user
+pip install Flask-Session --user
+pip install boto3 --user
+
+:: Generate APP_KEY and KEY for crypting the session cookies and the title of the articles
+IF EXIST "./.env" (
+    echo '.env exists'
+) ELSE (
+    python ./static/python/key.py
+)
+
 :: Launch server
-python index.py
+python app.py
