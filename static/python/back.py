@@ -100,6 +100,8 @@ class Back:
 
     def articleToApp(self, titre, article):
 
+        self.returned_size = 500
+
         # This dict is for the Back object only, it contains the text in clear and if it is part of the title or not
         self.text = {}
         # This dict is for the index, text blured or found, has way more information than the previous one
@@ -251,4 +253,9 @@ class Back:
 
         # Retourne True si l'article est un vrai
         # Retourne Faux si il est faux
-        return page_py.text != ""
+        if (page_py.text == ""):
+            return False
+        elif (len(page_py.text) < self.returned_size):
+            return False
+        else:
+            return True
