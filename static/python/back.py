@@ -31,7 +31,7 @@ TO DO:
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 500, trigger_exact = 0.58, unknownchar="•"):
+    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 1000, trigger_exact = 0.58, unknownchar="•"):
         self.toIndex = {}
         self.text = {}
         self.taille_article = taille_article
