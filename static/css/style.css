@@ -77,6 +77,10 @@ input:focus{
     content: "";
     flex: auto;
 }
+#article > p {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
 .character {
     color: rgb(100,100,100);
     user-select: none;
