@@ -34,7 +34,10 @@ model = KeyedVectors.load_word2vec_format("./data/model.bin", binary=True, unico
 @app.route('/new_article', methods=['POST'])
 def new_article():
     _back = back.Back()
-    _back.__dict__.update(session['back'])
+    try:
+        _back.__dict__.update(session['back'])
+    except:
+        pass
 
     # Si l'utilisateur a sélectionné un article aléatoire parmi tout wikipedia
     if request.get_json()['random'] == True:
@@ -56,7 +59,10 @@ def new_article():
 @app.route('/submit', methods=['POST'])
 def submit():
     _back = back.Back()
-    _back.__dict__.update(session['back'])
+    try:
+        _back.__dict__.update(session['back'])
+    except:
+        pass
     print(request.get_json()['in_word'])
     texte = _back.testMot(request.get_json()['in_word'], model)
     send = fromBacktoIndex(texte)
@@ -75,7 +81,10 @@ def home():
 def tricher():
     
     _back = back.Back()
-    _back.__dict__.update(session['back'])
+    try:
+        _back.__dict__.update(session['back'])
+    except:
+        pass
     
     texte = _back.tricher()
     send  = fromBacktoIndex(texte)
@@ -92,7 +101,10 @@ def selectArticle():
 @app.route('/add_article', methods=['POST', 'GET'])
 def addArticle():
     _back = back.Back()
-    _back.__dict__.update(session['back'])
+    try:
+        _back.__dict__.update(session['back'])
+    except:
+        pass
 
     if request.method == 'POST':
         # Tester si le mot est vrai ou pas
@@ -128,7 +140,10 @@ def addArticle():
 @app.route('/code_article', methods=['POST', 'GET'])
 def genererCodeArticle():
     _back = back.Back()
-    _back.__dict__.update(session['back'])
+    try:
+        _back.__dict__.update(session['back'])
+    except:
+        pass
 
     # Si méthode GET on renvoie le code crypté à l'utilisateur
     if request.method == 'GET':
