@@ -32,17 +32,17 @@ TO DO:
 
 class Back:
 
-    def __init__(self, taille_article = 1000, nb_paragraphes = 10, trigger_similarity = 0.2, max_similarity_states = 0.8, nb_states = 3, returned_size = 1000, trigger_exact = 0.58, unknownchar="•"):
+    def __init__(self):
         self.toIndex = {}
         self.text = {}
-        self.taille_article = taille_article
-        self.nb_paragraphes = nb_paragraphes
-        self.trigger_similarity = trigger_similarity
-        self.returned_size = returned_size
-        self.trigger_exact = trigger_exact
-        self.nb_states = nb_states
-        self.max_similarity_states = max_similarity_states
-        self.unknownchar = unknownchar
+        self.taille_article = 1000
+        self.nb_paragraphes = 10
+        self.trigger_similarity = 0.2
+        self.returned_size = 1000
+        self.trigger_exact = 0.58
+        self.nb_states = 3
+        self.max_similarity_states = 0.8
+        self.unknownchar = "•"
         self.titre = ""
 
     def __str__(self):
@@ -156,6 +156,7 @@ class Back:
         # Making sure we will not try to reach a value that does not exist
         if self.returned_size > self.taille_article:
             self.returned_size = self.taille_article
+
 
         for i in range(0, self.returned_size):
             self.toIndex[i] = to_index[i]
