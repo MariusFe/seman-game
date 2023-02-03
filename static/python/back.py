@@ -27,6 +27,7 @@ TO DO:
 - [ ] Work on the trigger
 - [ ] Maybe a trigger to say that two words are equal, example: "être" == "est". Trigger at 80% ?
 - [ ] Keep only a certain amount of paragraphs
+- [ ] Faster loading of the article
 """
 
 class Back:
@@ -254,8 +255,8 @@ class Back:
         # Retourne True si l'article est un vrai
         # Retourne Faux si il est faux
         if (page_py.text == ""):
-            return False
+            return False, ""
         elif (len(page_py.text) < self.returned_size):
-            return False
+            return False, ""
         else:
-            return True
+            return True, page_py.title

@@ -99,18 +99,18 @@ def addArticle():
         # return True: le texte entré est un vrai article
         # return False: le texte entré n'est pas un vrai article
         titreATester = request.get_json()['article']
-        vraiArticle = _back.checkTitreArticle(titreATester)
+        vraiArticleBool, vraiArticleNom = _back.checkTitreArticle(titreATester)
         inList = checkIfInList(titreATester)
 
         # On ajoute le titre au fichier texte si il est bon
 
-        if vraiArticle == True and  inList == False:
+        if vraiArticleBool == True and  inList == False:
             with open("./data/articleList.txt", 'a',encoding='utf8') as file:
-                file.writelines(titreATester + "\n")
+                file.writelines(vraiArticleNom + "\n")
 
         session['back'] = _back.__dict__
         return {
-            "vraiArticle": vraiArticle,
+            "vraiArticle": vraiArticleBool,
             "inList": inList
         }
 

@@ -35,7 +35,6 @@ Henri Pescarolo
 Peugeot 205 Turbo 16
 Tyrrell P34
 Roger Williamson
-Mathieu Chedid
 Alphonse d'Aragon (comte de Ribagorce)
 Paris
 Plélan-le-Grand
@@ -46,8 +45,8 @@ Diplôme d'ingénieur
 Github
 C (langage)
 Montfort-sur-Meu
-web
 internet
 Emmanuel Macron
-pute
 Maison
+World Wide Web
+Matthieu Chedid
