@@ -5,13 +5,14 @@
 - Sessions
 -->
 <head>
-    <meta charset="utf-8" name="viewport" content="inital-scale=1, width=device-width">
+    <meta charset="utf-8" name="viewport" content="width=device-width">
     <title>seman-game</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="./static/js/scriptIndex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="icon" type="image/x-icon" href="./static/images/lhommeau.png">
 </head>
     <body>
         <h1>Bienvenue</h1>
@@ -39,11 +40,9 @@
             </button>
             <br>
             <input type="radio" id="random" name="article_type" value="random" checked>
-            <label for="random">Article aléatoire</label>
+            <label for="random">Article aléatoire (⚠️ chargement long)</label>
             <input type="radio" id="liste" name="article_type" value="liste">
-            <label for="liste">Article parmi la liste</label>
-<!-- Il faut faire un input de type radio pour choisir soit un article de la liste (afficher la longueur ?) soit un article random
-Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
+            <label for="liste">Article parmi la liste (rapide)</label>
 
             <div id="div_code_article_generer">
                 <button id="code_article_generer" name="code_article_generer" type="submit">
@@ -66,7 +65,7 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
             </div>
             <form action="/selectArticle">
                 <button id="selection_article">
-                    Sélectionner des articles
+                    Vers page sélection des articles
                 </button>
             </form>
         </div>
@@ -79,17 +78,23 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
                 Que faut-il faire ?
             </p>
             <p>
-                Le jeu seman-game vous challenge à essayer de trouver le nom d'un article Wikipédia en s'aidant simplement de la sémantique des mots.
+                Le jeu seman-game vous challenge à essayer de trouver le nom d'un article Wikipédia en s'aidant simplement de 
+                la sémantique des mots.
             </p>
             <p style="font-weight: bold; font-size: 1.1em;">
                 Comment est-ce que je démarre le jeu ou que je génère un article ?
             </p>
             <p>
-                Rien de plus simple, vous avez plus haut un bouton appelé <span style="font-weight: bold;">Nouvel article</span>. Deux options s'offrent à vous en dessous de ce bouton, vous pouvez au choix choisir un article complètement aléatoire depuis l'entièreté du Wikipédia français ou de choisir un article parmi une liste d'article pré-définis qu'il est possible de fournir manuellement.
+                Rien de plus simple, vous avez plus haut un bouton appelé <span style="font-weight: bold;">Nouvel article</span>. 
+                Deux options s'offrent à vous en dessous de ce bouton, vous pouvez au choix choisir un article complètement aléatoire 
+                depuis l'entièreté du Wikipédia français ou de choisir un article parmi une liste d'article pré-définis 
+                qu'il est possible de fournir manuellement.
                 <br>
-                La première option, l'option aléatoire, prend généralement plus de temps à se générer, il est en effet nécessaire d'écremer tous les articles que nous renvoient Wikipédia.
+                La première option, l'option aléatoire, prend généralement plus de temps à se générer, il est en effet nécessaire 
+                d'écremer tous les articles que nous renvoient Wikipédia.
                 <br>
-                La seconde option, l'option d'un article parmi une liste, est plus rapide mais vous risquez de tomber sur un article que vous avez déjà recherché.
+                La seconde option, l'option d'un article parmi une liste, est plus rapide mais vous risquez de tomber sur un 
+                article que vous avez déjà recherché.
             </p>
             <p style="font-weight: bold; font-size: 1.1em;">
                 Comment gagner une partie ?
@@ -101,40 +106,79 @@ Ajouter la possibilité d'ajouter l'article en cours dans la liste-->
                 Pourquoi y a-t-il des points avec des espaces blancs sur la page quand je la génère ?
             </p>
             <p>
-                Ces points correspondent à des mots cachés par le jeu. En effet, les mots sont tout d'abord cachés afin de ne pas revelé la page directement. Chaque lettre est remplacé par un point afin de représenter la vraie taille du mot caché et donner une idée de ce qui est recherché. Les caractères et les espaces sont bien évidemment révélés.
+                Ces points correspondent à des mots cachés par le jeu. En effet, les mots sont tout d'abord cachés afin de 
+                ne pas revelé la page directement. Chaque lettre est remplacé par un point afin de représenter la vraie taille du 
+                mot caché et donner une idée de ce qui est recherché. Les caractères et les espaces sont bien évidemment révélés.
             </p>
             <p style="font-weight: bold; font-size: 1.1em;">
                 Comment "trouver" un mot ?
             </p>
             <p>
-                Pour trouver un mot, le rendre clair dans l'aire de jeu, il suffit de le taper dans le champ textuel tout en haut de la page. Dès lors, plusieurs évènement vont se produire:
+                Pour trouver un mot, le rendre clair dans l'aire de jeu, il suffit de le taper dans le champ textuel tout en haut de 
+                la page. Dès lors, plusieurs évènement vont se produire:
                 <ul>
-                    <li>Le mot tapé correspond exactement à un ou plusieurs mot de l'article. Le ou les mots correspondants vont s'afficher en clair avec un fond vert pendant quelques secondes.</li>
-                    <li>Le mot tapé a une sémantique proche de un ou plusieurs mots de l'article. Plus la sémantique est proche, plus le mot s'affichera dans une couleur claire, sur un fond noir, de rouge à jaune.</li>
-                    <li>Le mot tapé ne correpond à aucun mot ou ce n'est pas un mot existant dans le dictionnaire, dans ce cas rien ne se passe.</li>
+                    <li>Le mot tapé correspond exactement à un ou plusieurs mot de l'article. Le ou les mots correspondants vont 
+                        s'afficher en clair avec un fond vert pendant quelques secondes.</li>
+                    <li>Le mot tapé a une sémantique proche de un ou plusieurs mots de l'article. Plus la sémantique est proche, 
+                        plus le mot s'affichera dans une couleur claire, sur un fond noir, de rouge à jaune.</li>
+                    <li>Le mot tapé ne correpond à aucun mot ou ce n'est pas un mot existant dans le dictionnaire, dans ce cas 
+                        rien ne se passe.</li>
                 </ul>
             </p>
             <p style="font-weight: bold; font-size: 1.1em;">
                 La sémantique ? Qu'est-ce que c'est ?
             </p>
             <p>
-                La signification d'un mot
+                La sémantique est l'étude de la signification des mots et de la façon dont ils sont reliés les uns aux autres 
+                dans une langue. Le calcul de la similarité entre deux mots consiste à mesurer la ressemblance ou la proximité 
+                sémantique entre eux.<br>
+
+                Nous utilisons un outil effectuant ce calcul de similarité entre mots en utilisant un modèle de traitement 
+                du langage naturel tels que le modèle de mots vectoriels entraîné avec Wikipédia. Les modèles 
+                vectoriels représentent 
+                les mots sous forme de vecteurs numériques, ce qui permet de mesurer la similarité en utilisant des métriques 
+                mathématiques telles que la distance cosinus.<br>
+                
+                Deux mots proches sémantiquement ont donc un sens proche dans une phrase donnée. Par exemple les mots "haut" et 
+                "grand" qui sont tous les deux des adjectifs pouvant avoir un sens commun dans certains contexte pour décrire un 
+                bâtiment par exemple. Ou deux comme "France" et "Belgique" qui sont de proches voisins physiquement aussi.<br>
+
+                Néanmoins, il peut arriver que deux mots opposés sémantiquement aient une similarité proche avec notre modèle.<br>
             </p>
             <p  style="font-weight: bold; font-size: 1.1em;">
                 Puis-je jouer contre quelqu'un sur le même article ?
             </p>
             <p>
-                C'est une très bonne question, code de l'article
-                Challenge, temps, nombre de coups, demander à quelqu'un de générer un code pour vous avec un nom d'article.
+                C'est une très bonne question, seman-game propose de générer un code correspondant à l'article sur lequel tu 
+                es en train de jouer. En partageant le code à d'autres personnes il est possible de s'affronter, ou de 
+                chercher, ensemble sur le même article.<br>
+                Pour faire cela il suffit de cliquer sur le bouton <span style="font-weight: bold;">Générer code</span>. 
+                Un code est ensuite généré que vous pouvez copier à l'aide du bouton <span style="font-weight: bold;">Copier</span>.<br>
+                Vous pouvez ensuite partager le code à qui vous voulez. La personne ayant le code peut donc coller le code 
+                dans le champ de texte <span style="font-weight: bold;">Code de l'article</span>, cliquer sur
+                 <span style="font-weight: bold;">Entrer le code</span> et voilà !<br>
+                ⚠️ Ceci ne fonctionne que lorsque vous jouez sur le même serveur. Il n'est pas possible de rentrer le code et
+                 s'attendre à avoir le même article sur deux serveurs différents.
             </p>
             <p style="font-weight: bold; font-size: 1.1em;">
                 Je veux ajouter des mots dans la liste pour tout le monde, comment faire ?
             </p>
             <p>
-
+                Il est possible d'ajouter des articles dans la liste utilisée pour la génération de l'article rapide. 
+                Pour cela rendez vous sur la page de sélection des articles en cliquant sur le bouton correspondant sur la page princpale.<br>
+                Vous pouvez ainsi générer un nouvel article aléatoire qui sera affiché en clair par la suite en cliquant sur 
+                <span style="font-weight: bold;">Nouvel article</span>. De là vous pouvez choisir ou non de l'ajouter à la base 
+                de données des articles en cliquant sur <span style="font-weight: bold; color: darkgreen;">Oui</span> ou 
+                <span style="font-weight: bold; color: darkred;">Non</span>.<br>
+                <span style="font: bold;"><u>Nouveau !</u></span> Vous pouvez ajouter manuellement un article à la liste sans
+                 passer par la génération. Attention le jeu va s'assurer qu'il s'agit d'un vrai article. Attention aussi aux 
+                 homonymes, par exemple <span style="font-weight: bold;">Python</span> va renvoyer une page contenant tous les 
+                 homonymes de Python mais <span style="font-weight: bold;">Python (langage)</span> va retourner le langage de 
+                 programmation.
             </p>
             <p style="font-weight: bold; font-size: 1.1em;">
-                Je voudrais que les nombres s'affichent en étant proches l'un de l'autre, par exemple 1 et 2 sont proches, mais aussi que quand je tape le verbe "être" toutes les conjugaisons s'affichent.
+                Je voudrais que les nombres s'affichent en étant proches l'un de l'autre, par exemple 1 et 2 sont proches,
+                 mais aussi que quand je tape le verbe "être", par exemple, toutes les conjugaisons s'affichent.
             </p>
             <p>
                 Propose une amélioration du code sur GitHub !

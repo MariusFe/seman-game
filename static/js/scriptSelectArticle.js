@@ -65,7 +65,12 @@ $(document).ready(function() {
           event.preventDefault();
           document.getElementById("submit_article").click();
         }
-      }); 
+    }); 
+
+    // Redirect to index
+    $("#retour").click(function(){
+        location.href = document.URL.split('/')[0] + "//" + document.URL.split('/')[2];
+    });
 
 });
 
