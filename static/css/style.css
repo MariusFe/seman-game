@@ -138,6 +138,11 @@ p > span {
     text-align: left;
 }
 
+#List_Mots{
+    height: 200px;
+    overflow: auto;
+}
+
 
 @keyframes trouvein {
     from {

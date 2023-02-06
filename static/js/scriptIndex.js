@@ -20,6 +20,7 @@ $(document).ready(function() {
     chargement = document.getElementById("chargement");
     titre = document.getElementById("titre");
     article = document.getElementById("article");
+    wordlist = document.getElementById("word-list");
 
     // newarticle();
     document.getElementById("submit_word").click(); //triggers the ask of a document
@@ -37,12 +38,18 @@ $(document).ready(function() {
         var motToTest = document.getElementById("word").value.trim()
         if(motToTest != ""){
             //$( "#chargement" ).fadeIn("fast");
+            
             axios.post('/submit',{
                 "in_word": motToTest
             })
                 .then(function (response) {
                 // handle success
                 //$( "#chargement" ).fadeOut("fast");
+
+                var li = document.createElement("li");
+                li.innerHTML = motToTest;
+                wordlist.prependChild(li);
+
                 document.getElementById("word").value = "";
                 updateArticle(response.data);
                 checkdone();
@@ -67,6 +74,7 @@ $(document).ready(function() {
           }).then((result) => {
             if (result.isConfirmed) {
                 newarticle();
+                wordlist.innerHTML = "";
             } else if (result.isDenied) {
                 Swal.fire('Okay let\'s continue then !', '', 'info');
             }
