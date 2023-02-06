@@ -228,6 +228,40 @@ class Back:
             elif "trouve" in self.toIndex[i]["etat"]:
                 pass 
 
+            # Testing similarity with numbers
+            # Within 90% close -> Top
+            # 80% -> mitop
+            # 70% -> pastop
+            # To define
+            elif motToTest.isnumeric() and self.text[i]["mot"].isnumeric():
+                
+                # Smallest number at the top
+                if float(motToTest) < float(self.text[i]["mot"]):
+                    similarity = float(motToTest) / float(self.text[i]["mot"])
+                else:
+                    similarity = float(self.text[i]["mot"]) / float(motToTest) 
+
+                print(f'Nombre entré: {motToTest}, Nombre du texte: {self.text[i]["mot"]}, similarité: {similarity}')
+                
+                # We do not erase progress made so far
+                if similarity > self.toIndex[i]["percentage"]:
+                    self.toIndex[i]["percentage"] = similarity
+
+                    if similarity > 0.9:
+                        self.toIndex[i]["etat"] = ["top"]
+                        self.toIndex[i]["etat"].append("proche")
+                        self.toIndex[i]["mot"] = motToTest
+
+                    elif similarity > 0.8:
+                        self.toIndex[i]["etat"] = ["mitop"]
+                        self.toIndex[i]["etat"].append("proche")
+                        self.toIndex[i]["mot"] = motToTest
+
+                    elif similarity > 0.7:
+                        self.toIndex[i]["etat"] = ["pastop"]
+                        self.toIndex[i]["etat"].append("proche")
+                        self.toIndex[i]["mot"] = motToTest
+
             # We will check for the similarity if the word is not found already
             elif "trouve" not in self.toIndex[i]["etat"]:
                 # We try once again to be sure, redundancy, the last thing we want is the server to crash
