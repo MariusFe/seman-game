@@ -157,9 +157,46 @@ class Back:
         if self.returned_size > self.taille_article:
             self.returned_size = self.taille_article
 
+        # Nombre de paragraphes retournés
+        nb_paragraphes = 5
+        nb_paragraphes_current = 0
+        i = 0
+        last_i = 0
 
-        for i in range(0, self.returned_size):
-            self.toIndex[i] = to_index[i]
+        while nb_paragraphes_current < nb_paragraphes:
+            if to_index[i]["mot"] == "\n":
+                nb_paragraphes_current += 1
+                last_i = i
+            try:
+                # On essaie parce qu'il est possible d'arriver à la fin de l'article
+                self.toIndex[i] = to_index[i]
+            except:
+                # Pour éviter que l'on s'arrête en plein milieu d'un paragraphe et être sûr d'aller jusqu'à la fin
+                i = last_i
+                for i in range(0, i):
+                    self.toIndex[i] = to_index[i]
+                break
+            i = i + 1
+
+        # Si il n'y a pas assez de mot alors on continue d'ajouter des paragraphes
+        if len(self.toIndex) < self.taille_article:
+            nb_paragraphes_current = 0
+            nb_paragraphes = 3
+            while nb_paragraphes_current < nb_paragraphes:
+                if to_index[i]["mot"] == "\n":
+                    nb_paragraphes_current += 1
+                    last_i = i
+                try:
+                    self.toIndex[i] = to_index[i]
+                    i = last_i
+                    for i in range(0, i):
+                        self.toIndex[i] = to_index[i]
+                except:
+                    break
+                i = i + 1
+
+        # for i in range(0, len(to_index)):
+        #     self.toIndex[i] = to_index[i]
 
         self.titre = titre
 
