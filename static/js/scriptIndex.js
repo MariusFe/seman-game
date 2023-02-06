@@ -48,7 +48,7 @@ $(document).ready(function() {
 
                 var li = document.createElement("li");
                 li.innerHTML = motToTest;
-                wordlist.prependChild(li);
+                wordlist.appendChild(li);
 
                 document.getElementById("word").value = "";
                 updateArticle(response.data);
