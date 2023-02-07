@@ -172,14 +172,20 @@ def genererCodeArticle():
         except:
             return "Error"
 
-# Route to get an article with a code in the url
-# WIP
-@app.route('/article', methods=['POST'])
+# Voir un json que renvoie le serveur en réponse d'une requete
+@app.route('/article')
 def articleURL():
 
-    code = request.args.get('code')
+    _back = back.Back()
+    try:
+        _back.__dict__.update(session['back'])
+    except:
+        pass
 
-    return render_template('index.html')
+    to_index = _back.toIndex
+    send = fromBacktoIndex(to_index)
+
+    return json.dumps(send)
 
 # This function takes a dict returned from the back to transform it to a json read by the JavaScript in the .html doc
 # We could just directly return the correct format from the Back object I know but that means I need to redo a lot (flemme + ratio)
