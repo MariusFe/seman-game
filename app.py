@@ -129,7 +129,7 @@ def addArticle():
     # Si méthode GET on ajoute le titre de l'article actuel, on est sûr qu'il est bon
     else:
         titre = _back.titre
-        if not checkIfInList(titre):
+        if not checkIfInList(titre) and titre != "":
             with open("./data/articleList.txt", 'a',encoding='utf8') as file:
                 file.writelines(titre + "\n")
 

@@ -107,6 +107,9 @@ function updatePage(data){
     article.innerHTML = "";
     var counterSentence = 0;
         
+    var paragraphe = document.createElement("p");
+    var triggerArticle = false;
+
     for(let i in data){
         var mot = document.createElement("span");
         
@@ -114,20 +117,26 @@ function updatePage(data){
             mot.classList.add(classe);
         });
 
+        if(triggerArticle == false && data[i].classes.includes("article")){
+            triggerArticle = true;
+            titre.appendChild(paragraphe);
+            paragraphe = document.createElement("p");
+        }
+
         if(data[i].mot == " "){
             mot.innerHTML = "&nbsp;";
-        } /*else if (data[i].mot == "\n"){ // What to do with line break? it doesn't seem to work properly with just a creation of a <br>
-            mot = document.createElement("br");
-        }*/ else if (data[i].mot != ""){
+        } else if (data[i].mot == "\n"){
+            paragraphe.appendChild(mot);
+            article.appendChild(paragraphe);
+            paragraphe = document.createElement("p");
+            continue;
+        } else if (data[i].mot != ""){
             mot.innerHTML = data[i].mot; //save the word
         } else {
             continue;
         }
-    
-        if(data[i].classes.includes("titre"))
-            titre.appendChild(mot);
-        else 
-            article.appendChild(mot);
+        
+        paragraphe.appendChild(mot);
 
         // Only displays the first two sentences
         if(mot.innerHTML == "."){
