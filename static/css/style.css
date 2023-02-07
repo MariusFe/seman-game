@@ -51,6 +51,10 @@ input{
     width: min(500px, 80vw);
 }
 
+#random, #liste {
+    width: auto;
+}
+
 input:focus{
     border-color: white;
 }
@@ -303,4 +307,17 @@ footer {
     border-color: transparent;
     color: transparent;
     cursor: default;
+}
+
+#article_texte::placeholder{
+    font-size: 0.75em;
+}
+
+#radio_div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 10px 20px;
 }
