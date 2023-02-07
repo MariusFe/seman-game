@@ -140,6 +140,7 @@ p > span {
     border-radius: 20px;
     padding: 20px;
     text-align: left;
+    word-break: break-all;
 }
 
 #List_Mots{
