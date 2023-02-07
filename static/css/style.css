@@ -361,3 +361,7 @@ footer {
     cursor: pointer;
     color: black;
 }
+
+#code_article_challenge, #code_article_texte {
+    word-break: break-all;
+}
