@@ -86,6 +86,11 @@ $(document).ready(function() {
         navigator.clipboard.writeText(code);
     });
 
+    $("#copier_code_challenge").click(function(){
+        var code = document.getElementById("code_article_challenge").innerHTML;
+        navigator.clipboard.writeText(code);
+    });
+
     $("#code_article_generer").click(function(){
         axios.get('/code_article')
         .then(function(response){

@@ -320,4 +320,44 @@ footer {
     border-radius: 20px;
     border: solid 3px #00abc2;
     padding: 10px 20px;
+    width: fit-content;
+    margin: auto;
+}
+
+#challenge > span {
+    color: lightgray;
+}
+
+#challenge {
+    display: inline-block;
+}
+
+#challenge {
+    background-color: transparent;
+    border-radius: 20px;
+    border: solid 3px #00abc2;
+    padding: 20px 2vw;
+    color: lightgray;
+    font-size: 1.5em;
+    transition: 1s;
+    transition: 0.5s;
+    margin: 20px auto;
+    width: auto;
+}
+
+#copier_code_challenge{
+    background-color: gray;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: rgb(49, 49, 49);
+    font-size: 0.5em;
+    transition: 0.2s;
+    width: fit-content;
+    margin: 20px auto;
+    border: transparent;
+}
+
+#copier_code_challenge:hover{
+    cursor: pointer;
+    color: black;
 }

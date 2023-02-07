@@ -158,7 +158,7 @@ class Back:
             self.returned_size = self.taille_article
 
         # Nombre de paragraphes retournés
-        nb_paragraphes = 5
+        nb_paragraphes = 10
         nb_paragraphes_current = 0
         i = 0
         last_i = 0
